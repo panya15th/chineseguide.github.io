@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ครูจีนด้วยภาพ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Direction: monochrome ink chrome; colour is reserved for grammar roles and tones, so every colour on screen means something. */
+:root{
+  --bg:#f4f5f7; --surface:#ffffff; --surface2:#eef0f4; --ink:#1a1f2e; --muted:#5a6275; --line:#dde1e8;
+  --accent:#1a1f2e; --on-accent:#ffffff;
+  --subj:#2563c9; --verb:#cf3636; --obj:#1f8a4f; --place:#d96d12; --part:#6f7788;
+  --subj-bg:#e3edfb; --verb-bg:#fbe6e6; --obj-bg:#def3e7; --place-bg:#fcebdb; --part-bg:#eceef2;
+  --num:#8a4bd1; --num-bg:#efe6fb;
+  --t1:#2563c9; --t2:#1f8a4f; --t3:#d96d12; --t4:#cf3636; --t0:#6f7788;
+  --good:#1f8a4f; --bad:#cf3636;
+  --font-th:"IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-zh:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12151d; --surface:#1a1f2b; --surface2:#232937; --ink:#eceff5; --muted:#9aa3b6; --line:#2f3647;
+    --accent:#eceff5; --on-accent:#12151d;
+    --subj:#6aa3ff; --verb:#ff7a7a; --obj:#4fd08a; --place:#ffa24d; --part:#a2aabd;
+    --subj-bg:#1b2a46; --verb-bg:#3a2024; --obj-bg:#173126; --place-bg:#38271a; --part-bg:#272d3b;
+    --num:#c19bff; --num-bg:#2d2243;
+    --t1:#6aa3ff; --t2:#4fd08a; --t3:#ffa24d; --t4:#ff7a7a; --t0:#a2aabd;
+    --good:#4fd08a; --bad:#ff7a7a;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12151d; --surface:#1a1f2b; --surface2:#232937; --ink:#eceff5; --muted:#9aa3b6; --line:#2f3647;
+  --accent:#eceff5; --on-accent:#12151d;
+  --subj:#6aa3ff; --verb:#ff7a7a; --obj:#4fd08a; --place:#ffa24d; --part:#a2aabd;
+  --subj-bg:#1b2a46; --verb-bg:#3a2024; --obj-bg:#173126; --place-bg:#38271a; --part-bg:#272d3b;
+    --num:#c19bff; --num-bg:#2d2243;
+  --t1:#6aa3ff; --t2:#4fd08a; --t3:#ffa24d; --t4:#ff7a7a; --t0:#a2aabd;
+  --good:#4fd08a; --bad:#ff7a7a;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-th);line-height:1.6;font-size:16px}
+.zh{font-family:var(--font-zh)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--subj);outline-offset:2px}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px 56px}
+header{padding:20px 0 8px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{margin:0;font-size:1.65rem;line-height:1.2;text-wrap:balance}
+.sub{color:var(--muted);font-size:.92rem;margin-top:2px}
+.prog{font-size:.85rem;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--line);margin-bottom:16px}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{white-space:nowrap;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 16px;font-weight:500}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+h2{font-size:1.25rem;margin:0 0 10px;text-wrap:balance}
+h3{font-size:1.02rem;margin:22px 0 8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.grid{display:grid;gap:12px}
+.lessons{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.lcard{text-align:left;display:flex;flex-direction:column;gap:4px;transition:transform .15s}
+.lcard:hover{transform:translateY(-2px)}
+.lcard.locked{opacity:.8;border-style:dashed}
+.lcard .big{font-size:2.2rem;line-height:1}
+.lcard .zhT{font-family:var(--font-zh);font-weight:700;font-size:1.2rem}
+.muted{color:var(--muted)}
+.small{font-size:.86rem}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 14px;font-weight:500}
+.btn:hover{background:var(--surface2)}
+.btn.primary{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn.primary:hover{opacity:.9;background:var(--accent)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.back{margin-bottom:10px}
+/* tones + roles */
+.t{font-weight:600}
+.t1{color:var(--t1)}.t2{color:var(--t2)}.t3{color:var(--t3)}.t4{color:var(--t4)}.t0{color:var(--t0)}
+.r-num{color:var(--num)}.r-subj{color:var(--subj)}.r-verb{color:var(--verb)}.r-obj{color:var(--obj)}.r-place{color:var(--place)}.r-part{color:var(--part)}
+.b-num{background:var(--num-bg);border-color:var(--num);color:var(--num)}
+.b-subj{background:var(--subj-bg);border-color:var(--subj);color:var(--subj)}
+.b-verb{background:var(--verb-bg);border-color:var(--verb);color:var(--verb)}
+.b-obj{background:var(--obj-bg);border-color:var(--obj);color:var(--obj)}
+.b-place{background:var(--place-bg);border-color:var(--place);color:var(--place)}
+.b-part{background:var(--part-bg);border-color:var(--part);color:var(--part)}
+.legend{display:flex;gap:6px;flex-wrap:wrap;font-size:.8rem}
+.chip{border:1px solid;border-radius:999px;padding:1px 10px;font-weight:500}
+/* scene board */
+.scene{border-radius:16px;padding:14px;border:1px solid var(--line);background:var(--surface2)}
+.scene-cap{font-size:.85rem;color:var(--muted);margin-bottom:10px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:10px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 8px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tile .em{font-size:2.3rem;line-height:1.1}
+.tile .hz{font-family:var(--font-zh);font-size:1.5rem;font-weight:700;line-height:1.2}
+.tile .py{font-size:.9rem}
+.tile .th{font-size:.84rem;color:var(--muted)}
+.tile .tip{font-size:.76rem;color:var(--muted);margin-top:4px;border-top:1px dashed var(--line);padding-top:4px;text-align:left}
+.spk{display:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;width:30px;height:30px;line-height:1;padding:0;font-size:.95rem}
+body.has-tts .spk{display:inline-flex;align-items:center;justify-content:center}
+.ask{border:1px dashed var(--line);background:transparent;border-radius:999px;font-size:.76rem;padding:2px 10px;color:var(--muted)}
+.ask:hover{background:var(--surface2)}
+/* grammar */
+.gdiag{display:flex;gap:6px;align-items:stretch;flex-wrap:wrap}
+.gbox{border:2px solid;border-radius:12px;padding:8px 12px;text-align:center;min-width:76px}
+.gbox .zh{font-size:1.4rem;font-weight:700;line-height:1.3}
+.gbox .l{font-size:.75rem}
+.arrow{align-self:center;color:var(--muted);font-size:1.2rem}
+.ex{display:grid;gap:2px;padding:10px 0;border-top:1px solid var(--line)}
+.ex:first-child{border-top:0}
+.ex .zh{font-size:1.4rem;font-weight:500}
+.lvl{font-size:.72rem;border:1px solid var(--line);border-radius:999px;padding:0 8px;color:var(--muted);margin-left:6px;vertical-align:middle}
+.trap{border-left:4px solid var(--place);background:var(--place-bg);border-radius:8px;padding:8px 12px;font-size:.92rem;margin-top:10px}
+.note{border-left:4px solid var(--part);background:var(--part-bg);border-radius:8px;padding:8px 12px;font-size:.92rem;margin-top:10px}
+/* dialog */
+.dlg{display:grid;gap:10px}
+.bub{max-width:88%;border-radius:14px;padding:8px 12px;border:1px solid var(--line);background:var(--surface)}
+.bub.me{margin-left:auto;background:var(--subj-bg);border-color:var(--subj)}
+.bub .who{font-size:.72rem;color:var(--muted)}
+.bub .zh{font-size:1.25rem}
+.sw{display:flex;gap:14px;margin:6px 0 10px;font-size:.9rem}
+.sw label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.hide-py .pyl{display:none}.hide-th .thl{display:none}
+/* flashcards */
+.fc{min-height:290px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;cursor:pointer;user-select:none}
+.fc .em{font-size:5rem;line-height:1.1}
+.fc .hz{font-family:var(--font-zh);font-size:3.2rem;font-weight:700;line-height:1.2}
+.fc .py{font-size:1.4rem}
+.fc .th{font-size:1.15rem}
+.bar{height:8px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--obj);transition:width .25s}
+select{font:inherit;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
+/* quiz */
+.opts{display:grid;gap:8px;margin-top:12px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 14px}
+.opt:hover:not([disabled]){background:var(--surface2)}
+.opt.ok{background:var(--obj-bg);border-color:var(--obj)}
+.opt.no{background:var(--verb-bg);border-color:var(--verb)}
+.qbig{font-size:4rem;text-align:center;line-height:1.1}
+.qhz{font-family:var(--font-zh);font-size:2.4rem;font-weight:700;text-align:center;line-height:1.2}
+.slot{min-height:56px;border:2px dashed var(--line);border-radius:12px;padding:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.tk{font-family:var(--font-zh);font-size:1.35rem;font-weight:500;border:2px solid var(--line);background:var(--surface);border-radius:10px;padding:4px 14px}
+.fb{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:.95rem}
+.fb.ok{background:var(--obj-bg)}.fb.no{background:var(--verb-bg)}
+/* tones */
+.tgrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.tcard{text-align:center}
+.tcard svg{width:100%;height:auto;max-width:140px}
+.tcard .pyb{font-size:1.5rem;font-weight:700}
+.pitch path.line{fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.draw{stroke-dasharray:240;stroke-dashoffset:240;animation:dr .9s ease forwards}
+@keyframes dr{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion: reduce){.draw{animation:none;stroke-dashoffset:0}.lcard{transition:none}}
+/* chat */
+.chat{display:grid;gap:10px;margin-bottom:12px}
+.msg{padding:10px 14px;border-radius:14px;max-width:92%;border:1px solid var(--line);background:var(--surface);overflow-wrap:anywhere}
+.msg.user{margin-left:auto;background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.cinput{display:flex;gap:8px;align-items:flex-end}
+textarea{flex:1;font:inherit;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 12px;resize:vertical;min-height:48px;max-height:180px}
+.dots::after{content:"…";animation:bl 1s infinite}
+@keyframes bl{50%{opacity:.2}}
+@media (max-width:460px){.bub{max-width:96%}.fc .hz{font-size:2.6rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>ครูจีนด้วยภาพ</h1>
+      <div class="sub">ภาษาจีนสำหรับเที่ยว 3 ระดับ มีแบบทดสอบก่อนเข้าห้อง</div>
+    </div>
+    <div class="prog" id="prog" aria-live="polite"></div>
+  </header>
+  <nav><div class="tabs" role="tablist" id="tabs"></div></nav>
+  <main id="view"></main>
+</div>
+
+<script>
+/* ---------- helpers ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const TONE_MAP = {ā:1,ē:1,ī:1,ō:1,ū:1,ǖ:1,á:2,é:2,í:2,ó:2,ú:2,ǘ:2,ǎ:3,ě:3,ǐ:3,ǒ:3,ǔ:3,ǚ:3,à:4,è:4,ì:4,ò:4,ù:4,ǜ:4};
+const toneOf = s => { for (const c of s) if (TONE_MAP[c]) return TONE_MAP[c]; return 0; };
+const pyHTML = arr => arr.map(s => `<span class="t t${toneOf(s)}">${esc(s)}</span>`).join('');
+const pyPlain = arr => arr.join('');
+const hzHTML = (zh, py) => { const ch = Array.from(zh); return ch.map((c,i)=>`<span class="t t${toneOf(py[i]||'')}">${esc(c)}</span>`).join(''); };
+const ROLE_TH = {subj:'ประธาน', num:'จำนวน', verb:'กริยา/ภาคแสดง', obj:'กรรม', place:'เวลา-สถานที่', part:'คำช่วย'};
+const segHTML = segs => segs.map(([t,r]) => r ? `<span class="r-${r}">${esc(t)}</span>` : esc(t)).join('');
+const legendHTML = () => `<div class="legend">${Object.keys(ROLE_TH).map(r=>`<span class="chip b-${r}">${ROLE_TH[r]}</span>`).join('')}</div>`;
+
+/* ---------- optional capabilities ---------- */
+let TTS = null;
+if ('speechSynthesis' in window){ TTS = true; document.body.classList.add('has-tts'); }
+function say(text){
+  if (!TTS) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text); u.lang = 'zh-CN'; u.rate = 0.9;
+    const v = speechSynthesis.getVoices().find(x => /zh[-_]CN/i.test(x.lang)) || speechSynthesis.getVoices().find(x => /^zh/i.test(x.lang));
+    if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  } catch(e){}
+}
+if ('speechSynthesis' in window) speechSynthesis.getVoices();
+const store = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+};
+
+/* ---------- content ---------- */
+const LESSONS_L2 = [
+{ id:'food', em:'🍜', zh:'在饭馆', th:'ที่ร้านอาหาร', py:'zài fànguǎn', scene:'ฉากร้านอาหาร: เมนูอยู่บนโต๊ะ พนักงานเดินมารับออเดอร์',
+  words:[
+   {zh:'菜单', py:['cài','dān'], th:'เมนูอาหาร', em:'📋', tip:'菜 (อาหาร) + 单 (รายการ) = รายการอาหาร'},
+   {zh:'服务员', py:['fú','wù','yuán'], th:'พนักงานเสิร์ฟ', em:'🙋', tip:'服务 (บริการ) + 员 (พนักงาน)'},
+   {zh:'米饭', py:['mǐ','fàn'], th:'ข้าวสวย', em:'🍚', tip:'米 = ข้าวสาร, 饭 = ข้าวสุก/มื้ออาหาร'},
+   {zh:'水', py:['shuǐ'], th:'น้ำ', em:'💧', tip:'เสียง 3 ลงแล้วขึ้น เหมือนทำปากจะ "ชุ่ย"'},
+   {zh:'辣', py:['là'], th:'เผ็ด', em:'🌶️', tip:'พูดตอนสั่ง: 不辣 (ไม่เผ็ด), 微辣 (เผ็ดน้อย)'},
+   {zh:'买单', py:['mǎi','dān'], th:'เช็กบิล/คิดเงิน', em:'🧾', tip:'买 (ซื้อ) + 单 (บิล) = จ่ายบิล'}
+  ],
+  grammar:{ title:'我想 + กริยา + กรรม', th:'บอกสิ่งที่อยากทำหรืออยากได้ ใช้สั่งอาหารได้ทันที',
+   parts:[{r:'subj',zh:'我',th:'ฉัน'},{r:'verb',zh:'想',th:'อยาก'},{r:'verb',zh:'吃 / 喝',th:'กิน / ดื่ม'},{r:'obj',zh:'米饭 / 水',th:'ข้าว / น้ำ'}],
+   examples:[
+    {lvl:'ง่าย', s:[['我','subj'],['想','verb'],['喝','verb'],['水','obj'],['。','']], py:'wǒ xiǎng hē shuǐ', th:'ฉันอยากดื่มน้ำ'},
+    {lvl:'ง่าย', s:[['我','subj'],['想','verb'],['吃','verb'],['米饭','obj'],['。','']], py:'wǒ xiǎng chī mǐfàn', th:'ฉันอยากกินข้าว'},
+    {lvl:'ปานกลาง', s:[['我','subj'],['想','verb'],['吃','verb'],['不辣的','part'],['菜','obj'],['。','']], py:'wǒ xiǎng chī bú là de cài', th:'ฉันอยากกินอาหารที่ไม่เผ็ด'},
+    {lvl:'ใช้จริง', s:[['请','verb'],['给','verb'],['我','obj'],['菜单','obj'],['。','']], py:'qǐng gěi wǒ càidān', th:'ขอเมนูหน่อย'}
+   ],
+   use:'ใช้เมื่อบอกความต้องการแบบสุภาพ ปฏิเสธใช้ 不想 (ไม่อยาก) ส่วน 不要 แปลว่า "ไม่เอา" เสียงหนักกว่า',
+   trap:'ตัวขยายอยู่หน้านามเสมอ: 不辣的菜 = "ไม่เผ็ด-ของ-อาหาร" ไทยวางตัวขยายหลังนาม จีนวางไว้ข้างหน้า'},
+  dialog:[
+   {who:'พนักงาน', me:false, zh:'你好，请问几位？', py:'nǐ hǎo, qǐngwèn jǐ wèi?', th:'สวัสดีค่ะ ทั้งหมดกี่ท่านคะ'},
+   {who:'คุณ', me:true, zh:'我们两个人。', py:'wǒmen liǎng ge rén', th:'เรามีสองคน'},
+   {who:'พนักงาน', me:false, zh:'这是菜单。', py:'zhè shì càidān', th:'นี่คือเมนูค่ะ'},
+   {who:'คุณ', me:true, zh:'我想吃米饭，不要辣的。', py:'wǒ xiǎng chī mǐfàn, bú yào là de', th:'ฉันอยากกินข้าว ไม่เอาเผ็ด'},
+   {who:'คุณ', me:true, zh:'服务员，买单！', py:'fúwùyuán, mǎidān!', th:'คิดเงินด้วยครับ/ค่ะ'}
+  ]},
+{ id:'go', em:'🚇', zh:'问路和交通', th:'ถามทางและเดินทาง', py:'wèn lù hé jiāotōng', scene:'ฉากหน้าสถานีรถไฟใต้ดิน: ถามทางไปสนามบิน',
+  words:[
+   {zh:'地铁站', py:['dì','tiě','zhàn'], th:'สถานีรถไฟใต้ดิน', em:'🚇', tip:'地 (พื้นดิน) + 铁 (เหล็ก/ราง) + 站 (สถานี)'},
+   {zh:'出租车', py:['chū','zū','chē'], th:'แท็กซี่', em:'🚕', tip:'出租 (ให้เช่า) + 车 (รถ)'},
+   {zh:'机场', py:['jī','chǎng'], th:'สนามบิน', em:'✈️', tip:'机 (เครื่องบิน) + 场 (ลาน/สนาม)'},
+   {zh:'厕所', py:['cè','suǒ'], th:'ห้องน้ำ', em:'🚻', tip:'สุภาพขึ้นใช้ 洗手间 (xǐshǒujiān)'},
+   {zh:'左边', py:['zuǒ','bian'], th:'ด้านซ้าย', em:'⬅️', tip:'边 = ด้าน พยางค์หลังเสียงเบา'},
+   {zh:'右边', py:['yòu','bian'], th:'ด้านขวา', em:'➡️', tip:'เรื่องช่วยจำ: ปาก 口 ใต้ 右 = ปากกินข้าวด้วยมือขวา'}
+  ],
+  grammar:{ title:'สถานที่ + 在 + ที่ไหน', th:'ถามและบอกว่าสิ่งนั้นอยู่ที่ไหน',
+   parts:[{r:'subj',zh:'厕所',th:'สิ่งที่หา'},{r:'verb',zh:'在',th:'อยู่ที่'},{r:'place',zh:'哪儿 / 左边',th:'ที่ไหน / ซ้ายมือ'}],
+   examples:[
+    {lvl:'ง่าย', s:[['厕所','subj'],['在','verb'],['哪儿','place'],['？','']], py:'cèsuǒ zài nǎr', th:'ห้องน้ำอยู่ที่ไหน'},
+    {lvl:'ง่าย', s:[['地铁站','subj'],['在','verb'],['哪儿','place'],['？','']], py:'dìtiězhàn zài nǎr', th:'สถานีรถไฟใต้ดินอยู่ที่ไหน'},
+    {lvl:'ปานกลาง', s:[['厕所','subj'],['在','verb'],['左边','place'],['。','']], py:'cèsuǒ zài zuǒbian', th:'ห้องน้ำอยู่ทางซ้าย'},
+    {lvl:'ใช้จริง', s:[['请问','part'],['，',''],['去','verb'],['机场','place'],['怎么走','verb'],['？','']], py:'qǐngwèn, qù jīchǎng zěnme zǒu', th:'ขอถามหน่อย ไปสนามบินไปทางไหน'}
+   ],
+   use:'ใช้ 在 แปลว่า "อยู่ที่" เมื่อบอกตำแหน่ง ไม่ใช้ 是 ในประโยคแบบนี้ ถามทางให้ขึ้นต้นด้วย 请问 เสมอ',
+   trap:'哪儿 อ่านว่า nǎr (เสียง 3 + ออกเสียงลิ้นม้วนท้าย) อย่าอ่านเป็น "นา-เออ" สองพยางค์'},
+  dialog:[
+   {who:'คุณ', me:true, zh:'请问，机场在哪儿？', py:'qǐngwèn, jīchǎng zài nǎr?', th:'ขอถามหน่อย สนามบินอยู่ที่ไหน'},
+   {who:'คนท้องถิ่น', me:false, zh:'你可以坐地铁。', py:'nǐ kěyǐ zuò dìtiě', th:'คุณนั่งรถไฟใต้ดินได้'},
+   {who:'คุณ', me:true, zh:'地铁站在哪儿？', py:'dìtiězhàn zài nǎr?', th:'สถานีรถไฟใต้ดินอยู่ที่ไหน'},
+   {who:'คนท้องถิ่น', me:false, zh:'在右边。', py:'zài yòubian', th:'อยู่ทางขวา'},
+   {who:'คุณ', me:true, zh:'谢谢！', py:'xièxie!', th:'ขอบคุณ'}
+  ]},
+{ id:'hotel', em:'🏨', zh:'住酒店', th:'เข้าพักโรงแรม', py:'zhù jiǔdiàn', scene:'ฉากเคาน์เตอร์โรงแรม: จองห้องและถามเรื่องอาหารเช้า',
+  words:[
+   {zh:'酒店', py:['jiǔ','diàn'], th:'โรงแรม', em:'🏨', tip:'酒 (เหล้า) + 店 (ร้าน) แต่ความหมายคือโรงแรม อย่าแปลตรงตัว'},
+   {zh:'房间', py:['fáng','jiān'], th:'ห้องพัก', em:'🛏️', tip:'房 (ห้อง) + 间 (ช่อง/ห้อง)'},
+   {zh:'钥匙', py:['yào','shi'], th:'กุญแจ', em:'🔑', tip:'พยางค์ท้าย shi เป็นเสียงเบา'},
+   {zh:'护照', py:['hù','zhào'], th:'หนังสือเดินทาง', em:'🛂', tip:'护 (คุ้มครอง) + 照 (เอกสาร/ใบรับรอง)'},
+   {zh:'早饭', py:['zǎo','fàn'], th:'อาหารเช้า', em:'🍳', tip:'早 (เช้า) + 饭 (ข้าว/มื้ออาหาร)'},
+   {zh:'几点', py:['jǐ','diǎn'], th:'กี่โมง', em:'⏰', tip:'几 (กี่) + 点 (โมง/จุด)'}
+  ],
+  grammar:{ title:'มี / ไม่มี + 吗', th:'ถามว่ามีของไหม และตอบว่ามีหรือไม่มี',
+   parts:[{r:'subj',zh:'你们',th:'พวกคุณ'},{r:'verb',zh:'有',th:'มี'},{r:'obj',zh:'房间',th:'ห้องพัก'},{r:'part',zh:'吗',th:'คำถาม'}],
+   examples:[
+    {lvl:'ง่าย', s:[['你们','subj'],['有','verb'],['房间','obj'],['吗','part'],['？','']], py:'nǐmen yǒu fángjiān ma', th:'ที่นี่มีห้องว่างไหม'},
+    {lvl:'ง่าย', s:[['我','subj'],['没有','verb'],['钥匙','obj'],['。','']], py:'wǒ méiyǒu yàoshi', th:'ฉันไม่มีกุญแจ'},
+    {lvl:'ปานกลาง', s:[['酒店','subj'],['有','verb'],['早饭','obj'],['吗','part'],['？','']], py:'jiǔdiàn yǒu zǎofàn ma', th:'โรงแรมมีอาหารเช้าไหม'},
+    {lvl:'ใช้จริง', s:[['早饭','subj'],['几点','place'],['？','']], py:'zǎofàn jǐ diǎn', th:'อาหารเช้ากี่โมง'}
+   ],
+   use:'ถามว่ามีไหม ใช้ 有…吗 ตอบว่า 有 (มี) หรือ 没有 (ไม่มี)',
+   trap:'ปฏิเสธ 有 ต้องใช้ 没有 เท่านั้น ห้ามพูด 不有 และ 一个 ต้องอ่าน yí ge (一 เปลี่ยนเป็นเสียง 2 หน้าเสียง 4)'},
+  dialog:[
+   {who:'คุณ', me:true, zh:'你好，我想订一个房间。', py:'nǐ hǎo, wǒ xiǎng dìng yí ge fángjiān', th:'สวัสดี ฉันอยากจองห้องหนึ่งห้อง'},
+   {who:'พนักงาน', me:false, zh:'好的，请给我你的护照。', py:'hǎo de, qǐng gěi wǒ nǐ de hùzhào', th:'ได้ค่ะ ขอหนังสือเดินทางหน่อย'},
+   {who:'คุณ', me:true, zh:'这是我的护照。', py:'zhè shì wǒ de hùzhào', th:'นี่คือหนังสือเดินทางของฉัน'},
+   {who:'คุณ', me:true, zh:'酒店有早饭吗？', py:'jiǔdiàn yǒu zǎofàn ma?', th:'โรงแรมมีอาหารเช้าไหม'},
+   {who:'พนักงาน', me:false, zh:'有，七点到十点。', py:'yǒu, qī diǎn dào shí diǎn', th:'มีค่ะ เจ็ดโมงถึงสิบโมง'}
+  ]},
+{ id:'shop', em:'🛍️', zh:'买东西', th:'ซื้อของและต่อราคา', py:'mǎi dōngxi', scene:'ฉากตลาดและร้านค้า: ถามราคาและขอลด',
+  words:[
+   {zh:'衣服', py:['yī','fu'], th:'เสื้อผ้า', em:'👕', tip:'พยางค์ท้าย fu เป็นเสียงเบา'},
+   {zh:'鞋', py:['xié'], th:'รองเท้า', em:'👟', tip:'ข้างซ้ายคือ 革 แปลว่าหนัง'},
+   {zh:'包', py:['bāo'], th:'กระเป๋า', em:'👜', tip:'ความหมายเดิมคือ "ห่อ" ใช้เรียกกระเป๋าได้ด้วย'},
+   {zh:'贵', py:['guì'], th:'แพง', em:'💎', tip:'มี 贝 (เปลือกหอย เงินโบราณ) ด้านล่าง'},
+   {zh:'便宜', py:['pián','yi'], th:'ถูก', em:'🏷️', tip:'ในคำนี้ 便 อ่าน pián ไม่ใช่ biàn'},
+   {zh:'多少钱', py:['duō','shao','qián'], th:'ราคาเท่าไร', em:'💰', tip:'多少 (เท่าไร) + 钱 (เงิน) ซ้ายของ 钱 คือ 钅 (โลหะ)'}
+  ],
+  grammar:{ title:'太 + คำคุณศัพท์ + 了', th:'แปลว่า "…เกินไป" หรือ "…มากเลย" ตามอารมณ์ผู้พูด',
+   parts:[{r:'subj',zh:'这个',th:'อันนี้'},{r:'part',zh:'太',th:'เกินไป'},{r:'verb',zh:'贵',th:'แพง'},{r:'part',zh:'了',th:'คำช่วย'}],
+   examples:[
+    {lvl:'ง่าย', s:[['这个','subj'],['太','part'],['贵','verb'],['了','part'],['。','']], py:'zhège tài guì le', th:'อันนี้แพงเกินไป'},
+    {lvl:'ง่าย', s:[['太','part'],['好','verb'],['了','part'],['！','']], py:'tài hǎo le', th:'ดีมากเลย'},
+    {lvl:'ปานกลาง', s:[['这个','subj'],['多少钱','verb'],['？','']], py:'zhège duōshao qián', th:'อันนี้ราคาเท่าไร'},
+    {lvl:'ใช้จริง', s:[['可以','verb'],['便宜','verb'],['一点儿','part'],['吗','part'],['？','']], py:'kěyǐ piányi yìdiǎnr ma', th:'ลดหน่อยได้ไหม'}
+   ],
+   use:'ใช้ 太…了 เมื่อรู้สึกว่าเกินพอดี ถ้าอยากชมก็ใช้ได้เหมือนกัน เช่น 太好了',
+   trap:'ห้ามใช้ 很 ซ้อนกับ 太 และ 一点儿 อ่านว่า yìdiǎnr (一 เป็นเสียง 4 ก่อนเสียง 3)'},
+  dialog:[
+   {who:'คุณ', me:true, zh:'这个多少钱？', py:'zhège duōshao qián?', th:'อันนี้เท่าไร'},
+   {who:'คนขาย', me:false, zh:'一百五十块。', py:'yì bǎi wǔshí kuài', th:'หนึ่งร้อยห้าสิบหยวน'},
+   {who:'คุณ', me:true, zh:'太贵了！可以便宜一点儿吗？', py:'tài guì le! kěyǐ piányi yìdiǎnr ma?', th:'แพงเกินไป ลดหน่อยได้ไหม'},
+   {who:'คนขาย', me:false, zh:'好，一百二。', py:'hǎo, yì bǎi èr', th:'ได้ ร้อยยี่สิบ (พูดย่อของ 一百二十)'},
+   {who:'คุณ', me:true, zh:'好，我要了。', py:'hǎo, wǒ yào le', th:'ตกลง ฉันเอา'}
+  ]}
+];
+const LESSONS_L1 = [
+{ id:'greet', lv:1, em:'👋', zh:'打招呼', th:'ทักทายและแนะนำตัว', py:'dǎ zhāohu', scene:'ฉากพบเพื่อนใหม่: ทักทาย บอกชื่อ และบอกว่าเป็นคนไทย',
+  words:[
+   {zh:'你好', py:['nǐ','hǎo'], th:'สวัสดี', em:'🙂', tip:'เสียง 3 สองตัวติดกัน พูดจริงเป็น ní hǎo'},
+   {zh:'谢谢', py:['xiè','xie'], th:'ขอบคุณ', em:'🙏', tip:'พยางค์หลังเป็นเสียงเบา'},
+   {zh:'再见', py:['zài','jiàn'], th:'ลาก่อน / แล้วพบกันใหม่', em:'👋', tip:'再 (อีกครั้ง) + 见 (พบ) = พบกันอีก'},
+   {zh:'对不起', py:['duì','bu','qǐ'], th:'ขอโทษ', em:'🙇', tip:'พยางค์กลาง bu เป็นเสียงเบา'},
+   {zh:'名字', py:['míng','zi'], th:'ชื่อ', em:'📛', tip:'名 (ชื่อ) + 字 (ตัวอักษร)'},
+   {zh:'泰国人', py:['Tài','guó','rén'], th:'คนไทย', em:'🇹🇭', tip:'泰国 = ประเทศไทย, 人 = คน'}
+  ],
+  grammar:{ title:'我叫… / 我是…', th:'บอกชื่อและบอกว่าเป็นใคร',
+   parts:[{r:'subj',zh:'我',th:'ฉัน'},{r:'verb',zh:'叫 / 是',th:'ชื่อว่า / เป็น'},{r:'obj',zh:'小明 / 泰国人',th:'ชื่อ / สัญชาติ'}],
+   examples:[
+    {lvl:'ง่าย', s:[['我','subj'],['叫','verb'],['小明','obj'],['。','']], py:'wǒ jiào Xiǎo Míng', th:'ฉันชื่อเสี่ยวหมิง'},
+    {lvl:'ง่าย', s:[['我','subj'],['是','verb'],['泰国人','obj'],['。','']], py:'wǒ shì Tàiguó rén', th:'ฉันเป็นคนไทย'},
+    {lvl:'ปานกลาง', s:[['你','subj'],['叫','verb'],['什么','part'],['名字','obj'],['？','']], py:'nǐ jiào shénme míngzi', th:'คุณชื่ออะไร'},
+    {lvl:'ใช้จริง', s:[['你好','part'],['，',''],['我','subj'],['叫','verb'],['小明','obj'],['。','']], py:'nǐ hǎo, wǒ jiào Xiǎo Míng', th:'สวัสดี ฉันชื่อเสี่ยวหมิง'}
+   ],
+   use:'叫 ใช้บอกชื่อ ส่วน 是 ใช้บอกว่าเป็นอะไรหรือเป็นใคร',
+   trap:'ไม่ต้องใส่ 是 ก่อน 叫 (ห้ามพูด 我是叫…) และคำถาม "อะไร" คือ 什么 วางในตำแหน่งเดียวกับคำตอบ ไม่ย้ายไปหน้าประโยคแบบไทย'},
+  dialog:[
+   {who:'เพื่อนใหม่', me:false, zh:'你好！', py:'nǐ hǎo!', th:'สวัสดี'},
+   {who:'คุณ', me:true, zh:'你好，我是泰国人。', py:'nǐ hǎo, wǒ shì Tàiguó rén', th:'สวัสดี ฉันเป็นคนไทย'},
+   {who:'เพื่อนใหม่', me:false, zh:'你叫什么名字？', py:'nǐ jiào shénme míngzi?', th:'คุณชื่ออะไร'},
+   {who:'คุณ', me:true, zh:'我叫小明。', py:'wǒ jiào Xiǎo Míng', th:'ฉันชื่อเสี่ยวหมิง'},
+   {who:'เพื่อนใหม่', me:false, zh:'再见！', py:'zàijiàn!', th:'แล้วพบกันใหม่'}
+  ]},
+{ id:'num', lv:1, em:'💴', zh:'数字和钱', th:'ตัวเลขและเงิน', py:'shùzì hé qián', scene:'ฉากแผงขายของ: นับจำนวนและบอกราคาเป็นหยวน',
+  words:[
+   {zh:'一', py:['yī'], th:'หนึ่ง', em:'1️⃣', tip:'เสียงเปลี่ยนตามคำที่ตามมา: yī / yí / yì'},
+   {zh:'二', py:['èr'], th:'สอง (ใช้ในการนับเลข)', em:'2️⃣', tip:'บอกจำนวนสิ่งของใช้ 两 liǎng แทน'},
+   {zh:'三', py:['sān'], th:'สาม', em:'3️⃣', tip:'เสียง 1 สูงเรียบ'},
+   {zh:'五', py:['wǔ'], th:'ห้า', em:'5️⃣', tip:'เสียง 3 ลงแล้วขึ้น'},
+   {zh:'十', py:['shí'], th:'สิบ', em:'🔟', tip:'เสียง 2 ขึ้น และ shí ลิ้นม้วน'},
+   {zh:'块', py:['kuài'], th:'หยวน (ภาษาพูด)', em:'💴', tip:'ภาษาเขียนคือ 元 yuán ภาษาพูดนิยมพูด 块'}
+  ],
+  grammar:{ title:'ตัวเลข + ลักษณนาม + นาม', th:'นับจำนวนสิ่งของ คน และเงิน',
+   parts:[{r:'num',zh:'三',th:'จำนวน'},{r:'part',zh:'个 / 块',th:'ลักษณนาม'},{r:'obj',zh:'人 / 钱',th:'นาม'}],
+   examples:[
+    {lvl:'ง่าย', s:[['三','num'],['个','part'],['人','obj']], py:'sān ge rén', th:'สามคน'},
+    {lvl:'ง่าย', s:[['两','num'],['个','part'],['人','obj']], py:'liǎng ge rén', th:'สองคน (ใช้ 两 ไม่ใช่ 二)'},
+    {lvl:'ปานกลาง', s:[['五','num'],['块','part'],['钱','obj']], py:'wǔ kuài qián', th:'ห้าหยวน'},
+    {lvl:'ใช้จริง', s:[['这个','subj'],['十','num'],['块','part'],['。','']], py:'zhège shí kuài', th:'อันนี้สิบหยวน'}
+   ],
+   use:'ต้องมีลักษณนามคั่นระหว่างตัวเลขกับนามเสมอ ใช้ 个 กับคนและสิ่งของทั่วไป และ 块 กับเงิน',
+   trap:'บอกจำนวนสิ่งของให้ใช้ 两 ไม่ใช่ 二 (两个人) ส่วน 二 ใช้เวลานับเลขหรืออ่านเบอร์'},
+  dialog:[
+   {who:'คุณ', me:true, zh:'我要三个。', py:'wǒ yào sān ge', th:'ฉันเอาสามอัน'},
+   {who:'คนขาย', me:false, zh:'好的，十块。', py:'hǎo de, shí kuài', th:'ได้ค่ะ สิบหยวน'},
+   {who:'คุณ', me:true, zh:'谢谢！', py:'xièxie!', th:'ขอบคุณ'},
+   {who:'คนขาย', me:false, zh:'再见！', py:'zàijiàn!', th:'แล้วพบกันใหม่'}
+  ]},
+{ id:'drink', lv:1, em:'☕', zh:'吃和喝', th:'สั่งอาหารและเครื่องดื่ม', py:'chī hé hē', scene:'ฉากร้านกาแฟ: สั่งเครื่องดื่มและขอบคุณ',
+  words:[
+   {zh:'咖啡', py:['kā','fēi'], th:'กาแฟ', em:'☕', tip:'ทับศัพท์จากคำว่า coffee ทั้งสองพยางค์เสียง 1'},
+   {zh:'茶', py:['chá'], th:'ชา', em:'🍵', tip:'เสียง 2 ขึ้น ใกล้เคียงคำไทย "ชา"'},
+   {zh:'杯', py:['bēi'], th:'แก้ว (ลักษณนาม)', em:'🥛', tip:'ใช้นับเครื่องดื่ม: 一杯茶'},
+   {zh:'要', py:['yào'], th:'ต้องการ / เอา', em:'🤲', tip:'หนักแน่นกว่า 想 ใช้สั่งของ'},
+   {zh:'吃', py:['chī'], th:'กิน', em:'🍽️', tip:'ใช้กับอาหารที่ต้องเคี้ยว'},
+   {zh:'喝', py:['hē'], th:'ดื่ม', em:'🥤', tip:'ใช้กับของเหลว'}
+  ],
+  grammar:{ title:'我要 + ตัวเลข + ลักษณนาม + นาม', th:'สั่งของและบอกจำนวน',
+   parts:[{r:'subj',zh:'我',th:'ฉัน'},{r:'verb',zh:'要',th:'ต้องการ'},{r:'num',zh:'一',th:'จำนวน'},{r:'part',zh:'杯',th:'ลักษณนาม'},{r:'obj',zh:'咖啡',th:'เครื่องดื่ม'}],
+   examples:[
+    {lvl:'ง่าย', s:[['我','subj'],['喝','verb'],['茶','obj'],['。','']], py:'wǒ hē chá', th:'ฉันดื่มชา'},
+    {lvl:'ง่าย', s:[['我','subj'],['不','part'],['喝','verb'],['咖啡','obj'],['。','']], py:'wǒ bù hē kāfēi', th:'ฉันไม่ดื่มกาแฟ'},
+    {lvl:'ปานกลาง', s:[['我','subj'],['要','verb'],['一','num'],['杯','part'],['咖啡','obj'],['。','']], py:'wǒ yào yì bēi kāfēi', th:'ขอกาแฟหนึ่งแก้ว'},
+    {lvl:'ใช้จริง', s:[['我','subj'],['要','verb'],['两','num'],['杯','part'],['茶','obj'],['，',''],['谢谢','part'],['。','']], py:'wǒ yào liǎng bēi chá, xièxie', th:'ขอชาสองแก้ว ขอบคุณ'}
+   ],
+   use:'ใช้ 要 เมื่อสั่งของหรือบอกว่าต้องการ ปฏิเสธการกินดื่มใช้ 不 วางหน้ากริยา',
+   trap:'ลำดับต้องเป็น ตัวเลข + ลักษณนาม + นาม (一杯咖啡) ไม่พูด "กาแฟหนึ่งแก้ว" แบบไทย และ 一 หน้าเสียง 1 อ่านว่า yì'},
+  dialog:[
+   {who:'พนักงาน', me:false, zh:'你好，你要什么？', py:'nǐ hǎo, nǐ yào shénme?', th:'สวัสดีค่ะ คุณเอาอะไรคะ'},
+   {who:'คุณ', me:true, zh:'我要一杯咖啡。', py:'wǒ yào yì bēi kāfēi', th:'ฉันเอากาแฟหนึ่งแก้ว'},
+   {who:'พนักงาน', me:false, zh:'好的，十块。', py:'hǎo de, shí kuài', th:'ได้ค่ะ สิบหยวน'},
+   {who:'คุณ', me:true, zh:'谢谢！', py:'xièxie!', th:'ขอบคุณ'}
+  ]}
+];
+const LESSONS_L3 = [
+{ id:'exp', lv:3, em:'🧳', zh:'去过哪儿', th:'เคยไปที่ไหนมาบ้าง', py:'qù guo nǎr', scene:'ฉากหน้าแหล่งท่องเที่ยว: คุยเรื่องที่เคยไป ถ่ายรูป และซื้อตั๋ว',
+  words:[
+   {zh:'旅游', py:['lǚ','yóu'], th:'ท่องเที่ยว', em:'🧳', tip:'旅 (เดินทาง) + 游 (ท่อง)'},
+   {zh:'照片', py:['zhào','piàn'], th:'รูปถ่าย', em:'🖼️', tip:'照 (ถ่าย/ส่อง) + 片 (แผ่น)'},
+   {zh:'景点', py:['jǐng','diǎn'], th:'สถานที่ท่องเที่ยว', em:'🏞️', tip:'景 (ทิวทัศน์) + 点 (จุด)'},
+   {zh:'以前', py:['yǐ','qián'], th:'ก่อนหน้านี้ / ในอดีต', em:'⏪', tip:'前 = ข้างหน้า/ก่อน'},
+   {zh:'门票', py:['mén','piào'], th:'ตั๋วเข้าชม', em:'🎟️', tip:'门 (ประตู) + 票 (ตั๋ว)'},
+   {zh:'拍', py:['pāi'], th:'ถ่าย / ตบ', em:'📸', tip:'拍照 = ถ่ายรูป'}
+  ],
+  grammar:{ title:'กริยา + 过 (เคย…มาแล้ว)', th:'บอกประสบการณ์ที่เคยมีในอดีต',
+   parts:[{r:'subj',zh:'我',th:'ฉัน'},{r:'verb',zh:'去',th:'ไป'},{r:'part',zh:'过',th:'เคย'},{r:'place',zh:'北京',th:'ปักกิ่ง'}],
+   examples:[
+    {lvl:'ง่าย', s:[['我','subj'],['去','verb'],['过','part'],['北京','place'],['。','']], py:'wǒ qù guo Běijīng', th:'ฉันเคยไปปักกิ่ง'},
+    {lvl:'ง่าย', s:[['我','subj'],['没','part'],['去','verb'],['过','part'],['上海','place'],['。','']], py:'wǒ méi qù guo Shànghǎi', th:'ฉันไม่เคยไปเซี่ยงไฮ้'},
+    {lvl:'ปานกลาง', s:[['你','subj'],['拍','verb'],['过','part'],['照片','obj'],['吗','part'],['？','']], py:'nǐ pāi guo zhàopiàn ma', th:'คุณเคยถ่ายรูปไหม'},
+    {lvl:'ใช้จริง', s:[['以前','place'],['我','subj'],['没','part'],['来','verb'],['过','part'],['这个景点','obj'],['。','']], py:'yǐqián wǒ méi lái guo zhège jǐngdiǎn', th:'ก่อนหน้านี้ฉันไม่เคยมาสถานที่นี้'}
+   ],
+   use:'过 บอกว่าเคยมีประสบการณ์ ต่างจาก 了 ที่บอกว่าเหตุการณ์นั้นเกิดและจบแล้ว ปฏิเสธใช้ 没 + กริยา + 过',
+   trap:'ไทยวาง "เคย" ไว้หน้ากริยา แต่จีนวาง 过 ไว้หลังกริยา และ 过 อ่านเสียงเบาเป็น guo'},
+  dialog:[
+   {who:'เพื่อน', me:false, zh:'你去过北京吗？', py:'nǐ qù guo Běijīng ma?', th:'คุณเคยไปปักกิ่งไหม'},
+   {who:'คุณ', me:true, zh:'去过，以前我去北京旅游。', py:'qù guo, yǐqián wǒ qù Běijīng lǚyóu', th:'เคยไป ก่อนหน้านี้ฉันไปเที่ยวปักกิ่ง'},
+   {who:'เพื่อน', me:false, zh:'这个景点你来过吗？', py:'zhège jǐngdiǎn nǐ lái guo ma?', th:'สถานที่นี้คุณเคยมาไหม'},
+   {who:'คุณ', me:true, zh:'没来过，门票多少钱？', py:'méi lái guo, ménpiào duōshao qián?', th:'ไม่เคยมา ตั๋วเท่าไร'},
+   {who:'เพื่อน', me:false, zh:'一百块。', py:'yì bǎi kuài', th:'หนึ่งร้อยหยวน'}
+  ]},
+{ id:'cmp', lv:3, em:'⚖️', zh:'比一比', th:'เปรียบเทียบการเดินทาง', py:'bǐ yi bǐ', scene:'ฉากสถานีขนส่ง: เทียบความเร็วและราคาของยานพาหนะ',
+  words:[
+   {zh:'飞机', py:['fēi','jī'], th:'เครื่องบิน', em:'🛫', tip:'飞 (บิน) + 机 (เครื่อง)'},
+   {zh:'火车', py:['huǒ','chē'], th:'รถไฟ', em:'🚆', tip:'火 (ไฟ) + 车 (รถ)'},
+   {zh:'快', py:['kuài'], th:'เร็ว', em:'⚡', tip:'ออกเสียงเหมือน 块 (หยวน) ต้องดูบริบท'},
+   {zh:'慢', py:['màn'], th:'ช้า', em:'🐢', tip:'เสียง 4 ลงเร็ว'},
+   {zh:'近', py:['jìn'], th:'ใกล้', em:'📍', tip:'เสียง 4 ลงเร็ว'},
+   {zh:'远', py:['yuǎn'], th:'ไกล', em:'🏔️', tip:'เสียง 3 ลงแล้วขึ้น'}
+  ],
+  grammar:{ title:'A + 比 + B + คำคุณศัพท์', th:'เทียบสองสิ่งว่าสิ่งไหนมากกว่า',
+   parts:[{r:'subj',zh:'飞机',th:'A'},{r:'part',zh:'比',th:'เทียบกับ'},{r:'obj',zh:'火车',th:'B'},{r:'verb',zh:'快',th:'คำคุณศัพท์'}],
+   examples:[
+    {lvl:'ง่าย', s:[['飞机','subj'],['比','part'],['火车','obj'],['快','verb'],['。','']], py:'fēijī bǐ huǒchē kuài', th:'เครื่องบินเร็วกว่ารถไฟ'},
+    {lvl:'ง่าย', s:[['火车','subj'],['比','part'],['飞机','obj'],['慢','verb'],['。','']], py:'huǒchē bǐ fēijī màn', th:'รถไฟช้ากว่าเครื่องบิน'},
+    {lvl:'ปานกลาง', s:[['地铁','subj'],['比','part'],['出租车','obj'],['便宜','verb'],['。','']], py:'dìtiě bǐ chūzūchē piányi', th:'รถไฟใต้ดินถูกกว่าแท็กซี่'},
+    {lvl:'ใช้จริง', s:[['机场','subj'],['比','part'],['火车站','obj'],['远','verb'],['一点儿','part'],['。','']], py:'jīchǎng bǐ huǒchēzhàn yuǎn yìdiǎnr', th:'สนามบินไกลกว่าสถานีรถไฟนิดหน่อย'}
+   ],
+   use:'ใช้ 比 เทียบสองสิ่ง ถ้าอยากบอกว่า "ไม่เท่า" ให้ใช้ A + 没有 + B + คำคุณศัพท์ เช่น 火车没有飞机快',
+   trap:'ห้ามใส่ 很 หลัง 比 (比…很快 ผิด) ถ้าอยากบอกส่วนต่างให้ใส่ 一点儿 (นิดหน่อย) หลังคำคุณศัพท์แทน'},
+  dialog:[
+   {who:'เพื่อน', me:false, zh:'我们怎么去机场？', py:'wǒmen zěnme qù jīchǎng?', th:'เราจะไปสนามบินยังไง'},
+   {who:'คุณ', me:true, zh:'地铁比出租车便宜。', py:'dìtiě bǐ chūzūchē piányi', th:'รถไฟใต้ดินถูกกว่าแท็กซี่'},
+   {who:'เพื่อน', me:false, zh:'出租车比地铁快。', py:'chūzūchē bǐ dìtiě kuài', th:'แท็กซี่เร็วกว่ารถไฟใต้ดิน'},
+   {who:'คุณ', me:true, zh:'好，我们坐地铁。', py:'hǎo, wǒmen zuò dìtiě', th:'โอเค เรานั่งรถไฟใต้ดินกัน'}
+  ]},
+{ id:'lost', lv:3, em:'🆘', zh:'东西丢了', th:'ของหายและขอความช่วยเหลือ', py:'dōngxi diū le', scene:'ฉากเคาน์เตอร์ช่วยเหลือ: แจ้งของหายและขอให้ช่วยหา',
+  words:[
+   {zh:'忘', py:['wàng'], th:'ลืม', em:'💭', tip:'เสียง 4 ลงเร็ว'},
+   {zh:'找', py:['zhǎo'], th:'หา', em:'🔍', tip:'zh- ลิ้นม้วน เสียง 3'},
+   {zh:'丢', py:['diū'], th:'ทำหาย', em:'💨', tip:'เสียง 1 สูงเรียบ'},
+   {zh:'手机', py:['shǒu','jī'], th:'โทรศัพท์มือถือ', em:'📱', tip:'手 (มือ) + 机 (เครื่อง)'},
+   {zh:'帮', py:['bāng'], th:'ช่วย', em:'🤝', tip:'请你帮我… = ช่วยฉันหน่อย'},
+   {zh:'地图', py:['dì','tú'], th:'แผนที่', em:'🗺️', tip:'地 (ที่ดิน) + 图 (ภาพ)'}
+  ],
+  grammar:{ title:'把 + สิ่งของ + กริยา + ผลลัพธ์', th:'เน้นว่าทำอะไรกับสิ่งของจนเกิดผลลัพธ์',
+   parts:[{r:'subj',zh:'我',th:'ฉัน'},{r:'part',zh:'把',th:'จัดการกับ'},{r:'obj',zh:'手机',th:'สิ่งของ'},{r:'verb',zh:'忘',th:'กริยา'},{r:'place',zh:'在酒店了',th:'ผลลัพธ์'}],
+   examples:[
+    {lvl:'ง่าย', s:[['我','subj'],['把','part'],['包','obj'],['丢','verb'],['了','part'],['。','']], py:'wǒ bǎ bāo diū le', th:'ฉันทำกระเป๋าหาย'},
+    {lvl:'ปานกลาง', s:[['我','subj'],['找到','verb'],['钥匙','obj'],['了','part'],['。','']], py:'wǒ zhǎodào yàoshi le', th:'ฉันหากุญแจเจอแล้ว'},
+    {lvl:'ปานกลาง', s:[['我','subj'],['把','part'],['护照','obj'],['忘','verb'],['在酒店','place'],['了','part'],['。','']], py:'wǒ bǎ hùzhào wàng zài jiǔdiàn le', th:'ฉันลืมหนังสือเดินทางไว้ที่โรงแรม'},
+    {lvl:'ใช้จริง', s:[['请','verb'],['你','subj'],['帮','verb'],['我','obj'],['找','verb'],['手机','obj'],['。','']], py:'qǐng nǐ bāng wǒ zhǎo shǒujī', th:'ช่วยฉันหาโทรศัพท์หน่อย'}
+   ],
+   use:'ใช้ 把 เมื่อผู้พูดรู้ชัดว่าสิ่งของคืออะไร และอยากบอกว่าเกิดอะไรกับมัน มักตามด้วยผลลัพธ์ เช่น 在… / 了 / 到',
+   trap:'สิ่งของหลัง 把 ต้องเป็นของที่ระบุได้ชัดเจน และไม่ใช้ 把 กับกริยาอย่าง 有 หรือ 喜欢'},
+  dialog:[
+   {who:'คุณ', me:true, zh:'请你帮我，我把手机丢了。', py:'qǐng nǐ bāng wǒ, wǒ bǎ shǒujī diū le', th:'ช่วยฉันหน่อย ฉันทำมือถือหาย'},
+   {who:'เจ้าหน้าที่', me:false, zh:'你忘在哪儿了？', py:'nǐ wàng zài nǎr le?', th:'คุณลืมไว้ที่ไหน'},
+   {who:'คุณ', me:true, zh:'可能忘在酒店了。', py:'kěnéng wàng zài jiǔdiàn le', th:'อาจลืมไว้ที่โรงแรม (可能 = อาจจะ)'},
+   {who:'เจ้าหน้าที่', me:false, zh:'我们帮你找。', py:'wǒmen bāng nǐ zhǎo', th:'เราช่วยหาให้'},
+   {who:'คุณ', me:true, zh:'太好了，谢谢！', py:'tài hǎo le, xièxie!', th:'ดีมากเลย ขอบคุณ'}
+  ]}
+];
+const LESSONS_L4 = [
+{ id:'reason', lv:4, em:'🧩', zh:'因为所以', th:'บอกเหตุผลและผลลัพธ์', py:'yīnwèi suǒyǐ', scene:'ฉากหน้าร้านกาแฟ: เพื่อนมาสายและอธิบายว่าเกิดอะไรขึ้น',
+  words:[
+   {zh:'因为', py:['yīn','wèi'], th:'เพราะ', em:'❓', tip:'บอกเหตุผล มักขึ้นต้นประโยคแรก'},
+   {zh:'所以', py:['suǒ','yǐ'], th:'ดังนั้น / เลย', em:'🔚', tip:'บอกผลลัพธ์ ขึ้นต้นประโยคหลัง'},
+   {zh:'迟到', py:['chí','dào'], th:'มาสาย', em:'🏃', tip:'迟 (ช้า) + 到 (ถึง)'},
+   {zh:'堵车', py:['dǔ','chē'], th:'รถติด', em:'🚗', tip:'堵 (อุด) + 车 (รถ)'},
+   {zh:'担心', py:['dān','xīn'], th:'กังวล / เป็นห่วง', em:'😟', tip:'担 (แบก) + 心 (ใจ) = แบกความกังวลไว้ในใจ (เรื่องช่วยจำ)'},
+   {zh:'原因', py:['yuán','yīn'], th:'สาเหตุ', em:'🔎', tip:'原 (ต้นกำเนิด) + 因 (เหตุ)'}
+  ],
+  grammar:{ title:'因为…，所以…', th:'บอกเหตุผลและผลลัพธ์',
+   parts:[{r:'part',zh:'因为',th:'เพราะ'},{r:'verb',zh:'堵车',th:'เหตุผล'},{r:'part',zh:'所以',th:'ดังนั้น'},{r:'subj',zh:'我',th:'ฉัน'},{r:'verb',zh:'迟到了',th:'ผลลัพธ์'}],
+   examples:[
+    {lvl:'ง่าย', s:[['因为','part'],['堵车','verb'],['，',''],['所以','part'],['我','subj'],['迟到','verb'],['了','part'],['。','']], py:'yīnwèi dǔchē, suǒyǐ wǒ chídào le', th:'เพราะรถติด ฉันเลยมาสาย'},
+    {lvl:'ง่าย', s:[['因为','part'],['下雨','verb'],['，',''],['所以','part'],['我们','subj'],['不','part'],['去','verb'],['了','part'],['。','']], py:'yīnwèi xià yǔ, suǒyǐ wǒmen bú qù le', th:'เพราะฝนตก เราเลยไม่ไปแล้ว'},
+    {lvl:'ปานกลาง', s:[['他','subj'],['很','part'],['担心','verb'],['，',''],['因为','part'],['你','subj'],['还','part'],['没','part'],['回来','verb'],['。','']], py:'tā hěn dānxīn, yīnwèi nǐ hái méi huílái', th:'เขากังวล เพราะคุณยังไม่กลับมา'},
+    {lvl:'ใช้จริง', s:[['因为','part'],['这个','part'],['原因','obj'],['，',''],['所以','part'],['我','subj'],['不','part'],['想','verb'],['去','verb'],['。','']], py:'yīnwèi zhège yuányīn, suǒyǐ wǒ bù xiǎng qù', th:'เพราะเหตุผลนี้ ฉันเลยไม่อยากไป'}
+   ],
+   use:'因为 นำเหตุผล 所以 นำผลลัพธ์ ใช้เป็นคู่ได้ และในภาษาพูดละตัวใดตัวหนึ่งได้ หรือเอาเหตุผลไว้ท้ายประโยคโดยใช้ 因为 ก็ได้',
+   trap:'ไทยพูด "เพราะ…เลย" ได้ทั้งสองตัว แต่จีนห้ามสลับตำแหน่ง 因为 ต้องนำเหตุผล และ 所以 ต้องนำผลลัพธ์เสมอ'},
+  dialog:[
+   {who:'เพื่อน', me:false, zh:'你怎么迟到了？', py:'nǐ zěnme chídào le?', th:'ทำไมคุณมาสาย'},
+   {who:'คุณ', me:true, zh:'对不起，因为堵车。', py:'duìbuqǐ, yīnwèi dǔchē', th:'ขอโทษ เพราะรถติด'},
+   {who:'เพื่อน', me:false, zh:'我很担心你。', py:'wǒ hěn dānxīn nǐ', th:'ฉันเป็นห่วงคุณ'},
+   {who:'คุณ', me:true, zh:'别担心，我现在到了。', py:'bié dānxīn, wǒ xiànzài dào le', th:'อย่ากังวล ตอนนี้ฉันถึงแล้ว (别 = อย่า)'}
+  ]},
+{ id:'though', lv:4, em:'🌄', zh:'虽然但是', th:'แม้ว่า…แต่…', py:'suīrán dànshì', scene:'ฉากรีวิวโรงแรม: เล่าข้อเสียและข้อดีของที่พัก',
+  words:[
+   {zh:'虽然', py:['suī','rán'], th:'แม้ว่า', em:'🔀', tip:'ยอมรับข้อเสียหรือเงื่อนไขก่อน'},
+   {zh:'但是', py:['dàn','shì'], th:'แต่', em:'↩️', tip:'ชี้ข้อดีหรือประเด็นสำคัญกว่า'},
+   {zh:'风景', py:['fēng','jǐng'], th:'วิว / ทิวทัศน์', em:'🌄', tip:'风 (ลม) + 景 (ทิวทัศน์)'},
+   {zh:'舒服', py:['shū','fu'], th:'สบาย', em:'🛋️', tip:'พยางค์หลัง fu เป็นเสียงเบา'},
+   {zh:'热闹', py:['rè','nao'], th:'คึกคัก', em:'🎉', tip:'热 (ร้อน) + 闹 (เสียงดัง) พยางค์หลังเสียงเบา'},
+   {zh:'安静', py:['ān','jìng'], th:'เงียบสงบ', em:'🤫', tip:'安 (สงบ) + 静 (นิ่ง)'}
+  ],
+  grammar:{ title:'虽然…，但是…', th:'แม้ว่า…แต่…',
+   parts:[{r:'part',zh:'虽然',th:'แม้ว่า'},{r:'obj',zh:'房间很小',th:'ข้อเสีย'},{r:'part',zh:'但是',th:'แต่'},{r:'verb',zh:'很安静',th:'ข้อดี'}],
+   examples:[
+    {lvl:'ง่าย', s:[['虽然','part'],['很','part'],['贵','verb'],['，',''],['但是','part'],['很','part'],['好吃','verb'],['。','']], py:'suīrán hěn guì, dànshì hěn hǎochī', th:'แม้จะแพง แต่อร่อยมาก'},
+    {lvl:'ง่าย', s:[['虽然','part'],['天气','subj'],['很','part'],['热','verb'],['，',''],['但是','part'],['风景','subj'],['很','part'],['好','verb'],['。','']], py:'suīrán tiānqì hěn rè, dànshì fēngjǐng hěn hǎo', th:'แม้อากาศจะร้อน แต่วิวดีมาก'},
+    {lvl:'ปานกลาง', s:[['虽然','part'],['房间','subj'],['很','part'],['小','verb'],['，',''],['但是','part'],['很','part'],['安静','verb'],['。','']], py:'suīrán fángjiān hěn xiǎo, dànshì hěn ānjìng', th:'แม้ห้องจะเล็ก แต่เงียบสงบ'},
+    {lvl:'ใช้จริง', s:[['虽然','part'],['这里','place'],['很','part'],['热闹','verb'],['，',''],['但是','part'],['我','subj'],['觉得','verb'],['很','part'],['舒服','verb'],['。','']], py:'suīrán zhèlǐ hěn rènao, dànshì wǒ juéde hěn shūfu', th:'แม้ที่นี่จะคึกคัก แต่ฉันรู้สึกสบาย'}
+   ],
+   use:'虽然 ยอมรับข้อเสียหรือเงื่อนไขก่อน แล้ว 但是 ชี้ข้อดีที่สำคัญกว่า ใช้ได้ทั้งเรื่องสิ่งของและความรู้สึก',
+   trap:'ประโยคหลังต้องมี 但是 (หรือ 可是) ไม่ควรละ และห้ามใช้ 虽然 คู่กับ 所以 ซึ่งเป็นความผิดที่คนไทยพบบ่อย'},
+  dialog:[
+   {who:'เพื่อน', me:false, zh:'这家酒店怎么样？', py:'zhè jiā jiǔdiàn zěnmeyàng?', th:'โรงแรมนี้เป็นยังไงบ้าง'},
+   {who:'คุณ', me:true, zh:'虽然房间很小，但是很安静。', py:'suīrán fángjiān hěn xiǎo, dànshì hěn ānjìng', th:'แม้ห้องจะเล็ก แต่เงียบสงบ'},
+   {who:'เพื่อน', me:false, zh:'风景好吗？', py:'fēngjǐng hǎo ma?', th:'วิวดีไหม'},
+   {who:'คุณ', me:true, zh:'虽然没有海，但是风景很好。', py:'suīrán méiyǒu hǎi, dànshì fēngjǐng hěn hǎo', th:'แม้จะไม่มีทะเล แต่วิวดีมาก (海 = ทะเล)'},
+   {who:'เพื่อน', me:false, zh:'那我们住这儿吧。', py:'nà wǒmen zhù zhèr ba', th:'งั้นเราพักที่นี่กัน'}
+  ]},
+{ id:'if', lv:4, em:'🗓️', zh:'如果就', th:'ถ้า…ก็…', py:'rúguǒ jiù', scene:'ฉากวางแผนเที่ยว: คุยเงื่อนไขการจองและการเดินทาง',
+  words:[
+   {zh:'如果', py:['rú','guǒ'], th:'ถ้า', em:'🤔', tip:'ตั้งเงื่อนไข ขึ้นต้นประโยคแรก'},
+   {zh:'打算', py:['dǎ','suàn'], th:'ตั้งใจ / วางแผน', em:'📝', tip:'打算 + กริยา = ตั้งใจจะทำ'},
+   {zh:'决定', py:['jué','dìng'], th:'ตัดสินใจ', em:'✅', tip:'决 (ตัดสิน) + 定 (แน่นอน)'},
+   {zh:'机会', py:['jī','huì'], th:'โอกาส', em:'🍀', tip:'有机会 = มีโอกาส'},
+   {zh:'预订', py:['yù','dìng'], th:'จองล่วงหน้า', em:'📅', tip:'预 (ล่วงหน้า) + 订 (สั่งจอง)'},
+   {zh:'取消', py:['qǔ','xiāo'], th:'ยกเลิก', em:'❌', tip:'取 (เอา) + 消 (หายไป)'}
+  ],
+  grammar:{ title:'如果…，就…', th:'ถ้า…ก็…',
+   parts:[{r:'part',zh:'如果',th:'ถ้า'},{r:'verb',zh:'下雨',th:'เงื่อนไข'},{r:'subj',zh:'我们',th:'เรา'},{r:'part',zh:'就',th:'ก็'},{r:'verb',zh:'不去了',th:'ผลที่ตามมา'}],
+   examples:[
+    {lvl:'ง่าย', s:[['如果','part'],['下雨','verb'],['，',''],['我们','subj'],['就','part'],['不','part'],['去','verb'],['了','part'],['。','']], py:'rúguǒ xià yǔ, wǒmen jiù bú qù le', th:'ถ้าฝนตก เราก็ไม่ไปแล้ว'},
+    {lvl:'ง่าย', s:[['如果','part'],['你','subj'],['有','verb'],['时间','obj'],['，',''],['就','part'],['来','verb'],['找','verb'],['我','obj'],['。','']], py:'rúguǒ nǐ yǒu shíjiān, jiù lái zhǎo wǒ', th:'ถ้าคุณมีเวลา ก็มาหาฉัน'},
+    {lvl:'ปานกลาง', s:[['如果','part'],['太','part'],['贵','verb'],['，',''],['我','subj'],['就','part'],['不','part'],['预订','verb'],['了','part'],['。','']], py:'rúguǒ tài guì, wǒ jiù bú yùdìng le', th:'ถ้าแพงเกินไป ฉันก็ไม่จองแล้ว'},
+    {lvl:'ใช้จริง', s:[['如果','part'],['有','verb'],['机会','obj'],['，',''],['我','subj'],['就','part'],['打算','verb'],['再','part'],['来','verb'],['。','']], py:'rúguǒ yǒu jīhuì, wǒ jiù dǎsuàn zài lái', th:'ถ้ามีโอกาส ฉันก็ตั้งใจจะมาอีก'}
+   ],
+   use:'如果 ตั้งเงื่อนไข 就 เชื่อมไปสู่ผลที่ตามมา และ 就 ต้องอยู่หลังประธานของประโยคผล',
+   trap:'就 วางหลังประธาน หน้ากริยา ไม่ใช่ต้นประโยคเหมือน "ก็" ในภาษาไทย และไม่ใช้ 如果 คู่กับ 但是'},
+  dialog:[
+   {who:'เพื่อน', me:false, zh:'你决定去哪儿了吗？', py:'nǐ juédìng qù nǎr le ma?', th:'คุณตัดสินใจหรือยังว่าจะไปไหน'},
+   {who:'คุณ', me:true, zh:'还没有。如果有机会，我打算去云南。', py:'hái méiyǒu. rúguǒ yǒu jīhuì, wǒ dǎsuàn qù Yúnnán', th:'ยัง ถ้ามีโอกาสฉันตั้งใจจะไปหยุนหนาน'},
+   {who:'เพื่อน', me:false, zh:'机票要预订吗？', py:'jīpiào yào yùdìng ma?', th:'ต้องจองตั๋วเครื่องบินไหม (机票 = ตั๋วเครื่องบิน)'},
+   {who:'คุณ', me:true, zh:'如果现在预订，就便宜一点儿。', py:'rúguǒ xiànzài yùdìng, jiù piányi yìdiǎnr', th:'ถ้าจองตอนนี้ ก็ถูกลงหน่อย'},
+   {who:'เพื่อน', me:false, zh:'那你快预订吧。', py:'nà nǐ kuài yùdìng ba', th:'งั้นรีบจองเถอะ'}
+  ]}
+];
+const LESSONS_L5 = [
+{ id:'bei', lv:5, em:'🛡️', zh:'被字句', th:'ประโยคถูกกระทำ', py:'bèi zì jù', scene:'ฉากสถานีตำรวจ: แจ้งว่าของถูกขโมยบนรถไฟใต้ดิน',
+  words:[
+   {zh:'被', py:['bèi'], th:'ถูก', em:'👈', tip:'นำหน้าผู้กระทำหรือกริยา'},
+   {zh:'偷', py:['tōu'], th:'ขโมย', em:'🦹', tip:'เสียง 1 สูงเรียบ'},
+   {zh:'小偷', py:['xiǎo','tōu'], th:'ขโมย (คน)', em:'🕵️', tip:'小 (เล็ก) + 偷 (ขโมย)'},
+   {zh:'打扫', py:['dǎ','sǎo'], th:'ทำความสะอาด', em:'🧹', tip:'พยางค์สองตัวเสียง 3 ติดกัน พูดจริง dá sǎo'},
+   {zh:'弄坏', py:['nòng','huài'], th:'ทำพัง', em:'🔧', tip:'弄 (ทำ) + 坏 (เสีย) = ทำจนเสีย'},
+   {zh:'打碎', py:['dǎ','suì'], th:'ทำแตก', em:'💥', tip:'打 (ตี) + 碎 (แตกเป็นชิ้น)'}
+  ],
+  grammar:{ title:'สิ่งของ + 被 + (ผู้กระทำ) + กริยา + ผลลัพธ์', th:'ประโยคที่เน้นสิ่งที่ถูกกระทำ',
+   parts:[{r:'obj',zh:'我的手机',th:'สิ่งที่ถูกกระทำ'},{r:'part',zh:'被',th:'ถูก'},{r:'subj',zh:'小偷',th:'ผู้กระทำ (ละได้)'},{r:'verb',zh:'偷走了',th:'กริยา + ผลลัพธ์'}],
+   examples:[
+    {lvl:'ง่าย', s:[['我的手机','obj'],['被','part'],['偷','verb'],['了','part'],['。','']], py:'wǒ de shǒujī bèi tōu le', th:'โทรศัพท์ของฉันถูกขโมย'},
+    {lvl:'ง่าย', s:[['杯子','obj'],['被','part'],['我','subj'],['打碎','verb'],['了','part'],['。','']], py:'bēizi bèi wǒ dǎsuì le', th:'แก้วถูกฉันทำแตก'},
+    {lvl:'ปานกลาง', s:[['电脑','obj'],['被','part'],['弄坏','verb'],['了','part'],['。','']], py:'diànnǎo bèi nònghuài le', th:'คอมพิวเตอร์ถูกทำพัง'},
+    {lvl:'ใช้จริง', s:[['房间','obj'],['已经','part'],['被','part'],['打扫','verb'],['干净','verb'],['了','part'],['。','']], py:'fángjiān yǐjīng bèi dǎsǎo gānjìng le', th:'ห้องถูกทำความสะอาดเรียบร้อยแล้ว'}
+   ],
+   use:'ใช้ 被 เมื่อเน้นสิ่งที่ถูกกระทำ มักเป็นเรื่องที่ไม่พึงใจ ผู้กระทำใส่หรือไม่ใส่ก็ได้ และปฏิเสธใช้ 没 วางไว้หน้า 被',
+   trap:'โดยทั่วไปกริยาหลัง 被 ต้องมีผลลัพธ์หรือ 了 ตามหลัง ไม่ใช่กริยาเดี่ยว ๆ และ 没 อยู่หน้า 被 เช่น 手机没被偷'},
+  dialog:[
+   {who:'คุณ', me:true, zh:'不好了，我的手机被偷了！', py:'bù hǎo le, wǒ de shǒujī bèi tōu le!', th:'แย่แล้ว โทรศัพท์ฉันถูกขโมย'},
+   {who:'เจ้าหน้าที่', me:false, zh:'你的手机在哪儿被偷了？', py:'nǐ de shǒujī zài nǎr bèi tōu le?', th:'โทรศัพท์คุณถูกขโมยที่ไหน'},
+   {who:'คุณ', me:true, zh:'在地铁里。', py:'zài dìtiě lǐ', th:'ในรถไฟใต้ดิน'},
+   {who:'เจ้าหน้าที่', me:false, zh:'请告诉我你的名字。', py:'qǐng gàosu wǒ nǐ de míngzi', th:'กรุณาบอกชื่อของคุณ'},
+   {who:'คุณ', me:true, zh:'我叫小明。', py:'wǒ jiào Xiǎo Míng', th:'ฉันชื่อเสี่ยวหมิง'}
+  ]},
+{ id:'direct', lv:5, em:'🧭', zh:'来和去', th:'ทิศทางการเคลื่อนที่', py:'lái hé qù', scene:'ฉากหน้าประตูห้อง: เชิญเข้ามา ถือของ และวางของ',
+  words:[
+   {zh:'带', py:['dài'], th:'พา / เอาไป / ถือ', em:'🎒', tip:'带 + ของ + 来/去'},
+   {zh:'拿', py:['ná'], th:'หยิบ / ถือ', em:'🫴', tip:'拿出来 = หยิบออกมา'},
+   {zh:'放', py:['fàng'], th:'วาง', em:'📥', tip:'放进去 = วางเข้าไป'},
+   {zh:'搬', py:['bān'], th:'ย้าย / ยกของ', em:'📦', tip:'ใช้กับของหนัก'},
+   {zh:'进来', py:['jìn','lái'], th:'เข้ามา', em:'🚪', tip:'进 (เข้า) + 来 (มาหาผู้พูด)'},
+   {zh:'出去', py:['chū','qù'], th:'ออกไป', em:'🚶', tip:'出 (ออก) + 去 (ไปจากผู้พูด)'}
+  ],
+  grammar:{ title:'กริยา + ทิศทาง + 来/去', th:'บอกทิศทางการเคลื่อนที่เทียบกับผู้พูด',
+   parts:[{r:'subj',zh:'他',th:'เขา'},{r:'verb',zh:'走',th:'เดิน'},{r:'part',zh:'出',th:'ออก'},{r:'part',zh:'去',th:'ไป (ห่างผู้พูด)'}],
+   examples:[
+    {lvl:'ง่าย', s:[['请','verb'],['进来','verb'],['。','']], py:'qǐng jìnlái', th:'เชิญเข้ามา'},
+    {lvl:'ง่าย', s:[['他','subj'],['走','verb'],['出去','part'],['了','part'],['。','']], py:'tā zǒu chūqù le', th:'เขาเดินออกไปแล้ว'},
+    {lvl:'ปานกลาง', s:[['请','verb'],['把','part'],['东西','obj'],['放','verb'],['进去','part'],['。','']], py:'qǐng bǎ dōngxi fàng jìnqù', th:'กรุณาเอาของวางใส่เข้าไป'},
+    {lvl:'ใช้จริง', s:[['你','subj'],['带','verb'],['什么','part'],['回来','part'],['了','part'],['？','']], py:'nǐ dài shénme huílái le', th:'คุณเอาอะไรกลับมา'}
+   ],
+   use:'来 = เคลื่อนเข้าหาผู้พูด 去 = เคลื่อนออกห่างผู้พูด ใช้ต่อท้ายกริยา และเติม 上/下/进/出/回 เพื่อบอกทิศ',
+   trap:'จีนเลือก 来/去 ตามตำแหน่งของผู้พูด ไม่ใช่ตามผู้กระทำ และถ้ามีสถานที่ ให้วางไว้ก่อน 来/去 เช่น 他走进房间去了'},
+  dialog:[
+   {who:'เจ้าของห้อง', me:false, zh:'请进来坐。', py:'qǐng jìnlái zuò', th:'เชิญเข้ามานั่ง'},
+   {who:'คุณ', me:true, zh:'谢谢。我可以把包放进去吗？', py:'xièxie. wǒ kěyǐ bǎ bāo fàng jìnqù ma?', th:'ขอบคุณ ฉันเอากระเป๋าวางเข้าไปได้ไหม'},
+   {who:'เจ้าของห้อง', me:false, zh:'可以。你带什么来了？', py:'kěyǐ. nǐ dài shénme lái le?', th:'ได้ คุณเอาอะไรมา'},
+   {who:'คุณ', me:true, zh:'我带了水果来。', py:'wǒ dài le shuǐguǒ lái', th:'ฉันเอาผลไม้มา'}
+  ]},
+{ id:'more', lv:5, em:'📈', zh:'越来越', th:'เป็นมากขึ้นเรื่อย ๆ', py:'yuè lái yuè', scene:'ฉากพบเพื่อนเก่า: คุยว่าภาษาจีนและความเคยชินดีขึ้นอย่างไร',
+  words:[
+   {zh:'越来越', py:['yuè','lái','yuè'], th:'…ขึ้นเรื่อย ๆ', em:'⏫', tip:'越 สองตัวคร่อม 来 = ยิ่งมา ยิ่ง'},
+   {zh:'流利', py:['liú','lì'], th:'คล่อง', em:'🗣️', tip:'流 (ไหล) + 利 (คม) = ไหลลื่น'},
+   {zh:'熟悉', py:['shú','xī'], th:'คุ้นเคย', em:'🏠', tip:'熟 (สุก/ชำนาญ) + 悉 (รู้)'},
+   {zh:'习惯', py:['xí','guàn'], th:'ชิน / นิสัย', em:'🔁', tip:'习 (ฝึก) + 惯 (ชิน)'},
+   {zh:'进步', py:['jìn','bù'], th:'ก้าวหน้า', em:'🪜', tip:'进 (เข้า/ก้าว) + 步 (ก้าว)'},
+   {zh:'容易', py:['róng','yì'], th:'ง่าย', em:'👌', tip:'ตรงข้ามคือ 难 (ยาก)'}
+  ],
+  grammar:{ title:'越来越 + คำคุณศัพท์', th:'บอกว่าเป็นมากขึ้นเรื่อย ๆ',
+   parts:[{r:'subj',zh:'我的中文',th:'ภาษาจีนของฉัน'},{r:'part',zh:'越来越',th:'…ขึ้นเรื่อย ๆ'},{r:'verb',zh:'流利',th:'คำคุณศัพท์'},{r:'part',zh:'了',th:'เปลี่ยนไปแล้ว'}],
+   examples:[
+    {lvl:'ง่าย', s:[['天气','subj'],['越来越','part'],['热','verb'],['了','part'],['。','']], py:'tiānqì yuè lái yuè rè le', th:'อากาศร้อนขึ้นเรื่อย ๆ'},
+    {lvl:'ง่าย', s:[['我的中文','subj'],['越来越','part'],['流利','verb'],['。','']], py:'wǒ de Zhōngwén yuè lái yuè liúlì', th:'ภาษาจีนของฉันคล่องขึ้นเรื่อย ๆ'},
+    {lvl:'ปานกลาง', s:[['这里的人','subj'],['越来越','part'],['多','verb'],['了','part'],['。','']], py:'zhèlǐ de rén yuè lái yuè duō le', th:'คนที่นี่มากขึ้นเรื่อย ๆ'},
+    {lvl:'ใช้จริง', s:[['我','subj'],['越来越','part'],['习惯','verb'],['这儿的天气','obj'],['了','part'],['。','']], py:'wǒ yuè lái yuè xíguàn zhèr de tiānqì le', th:'ฉันชินกับอากาศที่นี่มากขึ้นเรื่อย ๆ'}
+   ],
+   use:'越来越 บอกแนวโน้มที่เปลี่ยนไปตามเวลา เป็นการเทียบกับตัวมันเองในอดีต มักมี 了 ท้ายประโยค',
+   trap:'ห้ามใส่ 很 หรือ 太 หลัง 越来越 (越来越很 ผิด) และไม่ใช้เทียบสองสิ่ง ซึ่งต้องใช้ 比'},
+  dialog:[
+   {who:'เพื่อน', me:false, zh:'你的中文说得真好！', py:'nǐ de Zhōngwén shuō de zhēn hǎo!', th:'ภาษาจีนคุณพูดได้ดีจริง ๆ'},
+   {who:'คุณ', me:true, zh:'谢谢，我觉得越来越容易了。', py:'xièxie, wǒ juéde yuè lái yuè róngyì le', th:'ขอบคุณ ฉันรู้สึกว่าง่ายขึ้นเรื่อย ๆ'},
+   {who:'เพื่อน', me:false, zh:'你来中国多久了？', py:'nǐ lái Zhōngguó duō jiǔ le?', th:'คุณมาจีนนานเท่าไรแล้ว (多久 = นานเท่าไร)'},
+   {who:'คุณ', me:true, zh:'三个月了，我越来越习惯了。', py:'sān ge yuè le, wǒ yuè lái yuè xíguàn le', th:'สามเดือนแล้ว ฉันชินขึ้นเรื่อย ๆ'}
+  ]}
+];
+const LESSONS_L6 = [
+{ id:'purpose', lv:6, em:'🎯', zh:'为了', th:'เพื่อ (จุดประสงค์)', py:'wèile', scene:'ฉากห้องประชุม: ผู้จัดการและทีมคุยสัญญาใหม่',
+  words:[
+   {zh:'为了', py:['wèi','le'], th:'เพื่อ', em:'🏁', tip:'นำจุดประสงค์ของการกระทำ'},
+   {zh:'经理', py:['jīng','lǐ'], th:'ผู้จัดการ', em:'👔', tip:'经 (จัดการ) + 理 (เหตุผล/ดูแล)'},
+   {zh:'会议', py:['huì','yì'], th:'การประชุม', em:'🪑', tip:'开会议 หรือ 开会 = ประชุม'},
+   {zh:'合同', py:['hé','tong'], th:'สัญญา', em:'📄', tip:'签合同 = เซ็นสัญญา'},
+   {zh:'联系', py:['lián','xì'], th:'ติดต่อ', em:'📞', tip:'联系 + คน = ติดต่อใคร'},
+   {zh:'报价', py:['bào','jià'], th:'เสนอราคา', em:'🪙', tip:'报 (แจ้ง) + 价 (ราคา)'}
+  ],
+  grammar:{ title:'为了 + จุดประสงค์，…', th:'บอกจุดประสงค์ของการกระทำ',
+   parts:[{r:'part',zh:'为了',th:'เพื่อ'},{r:'verb',zh:'学中文',th:'จุดประสงค์'},{r:'subj',zh:'我',th:'ฉัน'},{r:'verb',zh:'来北京',th:'การกระทำ'}],
+   examples:[
+    {lvl:'ง่าย', s:[['为了','part'],['学','verb'],['中文','obj'],['，',''],['我','subj'],['来','verb'],['北京','place'],['。','']], py:'wèile xué Zhōngwén, wǒ lái Běijīng', th:'เพื่อเรียนภาษาจีน ฉันมาปักกิ่ง'},
+    {lvl:'ง่าย', s:[['为了','part'],['开会','verb'],['，',''],['经理','subj'],['去','verb'],['了','part'],['上海','place'],['。','']], py:'wèile kāi huì, jīnglǐ qù le Shànghǎi', th:'เพื่อประชุม ผู้จัดการไปเซี่ยงไฮ้'},
+    {lvl:'ปานกลาง', s:[['为了','part'],['不','part'],['迟到','verb'],['，',''],['我们','subj'],['早','part'],['点儿','part'],['走','verb'],['吧','part'],['。','']], py:'wèile bù chídào, wǒmen zǎo diǎnr zǒu ba', th:'เพื่อไม่ให้สาย เราไปเร็วหน่อยเถอะ'},
+    {lvl:'ใช้จริง', s:[['为了','part'],['这个','part'],['合同','obj'],['，',''],['大家','subj'],['都','part'],['很','part'],['努力','verb'],['。','']], py:'wèile zhège hétong, dàjiā dōu hěn nǔlì', th:'เพื่อสัญญาฉบับนี้ ทุกคนทุ่มเทมาก (努力 = ทุ่มเท)'}
+   ],
+   use:'为了 นำจุดประสงค์ ประโยคหลังคือสิ่งที่ทำเพื่อจุดประสงค์นั้น วางไว้ต้นประโยคหรือหลังประธานก็ได้',
+   trap:'ใช้ 为了 กับจุดประสงค์ เช่น 为了学习 ส่วนถ้าบอกว่าทำให้ใคร ให้ใช้ 给 หรือ 为 + คน เช่น 我给你买了票 และไม่ใช้ 为了 คู่กับ 所以'},
+  dialog:[
+   {who:'คุณ', me:true, zh:'经理，这是新合同。', py:'jīnglǐ, zhè shì xīn hétong', th:'ผู้จัดการ นี่คือสัญญาใหม่'},
+   {who:'ผู้จัดการ', me:false, zh:'为了这个合同，你辛苦了。', py:'wèile zhège hétong, nǐ xīnkǔ le', th:'เพื่อสัญญานี้ คุณเหนื่อยมาก (辛苦了 = ขอบคุณที่เหน็ดเหนื่อย)'},
+   {who:'คุณ', me:true, zh:'不辛苦。会议几点开始？', py:'bù xīnkǔ. huìyì jǐ diǎn kāishǐ?', th:'ไม่เหนื่อย ประชุมกี่โมงเริ่ม'},
+   {who:'ผู้จัดการ', me:false, zh:'下午三点。我会联系客人。', py:'xiàwǔ sān diǎn. wǒ huì liánxì kèrén', th:'บ่ายสามโมง ฉันจะติดต่อลูกค้า (客人 = ลูกค้า/แขก)'}
+  ]},
+{ id:'notonly', lv:6, em:'⭐', zh:'不但而且', th:'ไม่เพียงแต่…แต่ยัง…', py:'búdàn érqiě', scene:'ฉากเขียนรีวิว: ชมโรงแรมและร้านอาหารหลายข้อ',
+  words:[
+   {zh:'不但', py:['bú','dàn'], th:'ไม่เพียงแต่', em:'➕', tip:'不 เปลี่ยนเป็นเสียง 2 เพราะหน้าเสียง 4'},
+   {zh:'而且', py:['ér','qiě'], th:'แต่ยัง / และยัง', em:'🔝', tip:'เพิ่มข้อดีที่หนักขึ้น'},
+   {zh:'质量', py:['zhì','liàng'], th:'คุณภาพ', em:'🏅', tip:'质量好 = คุณภาพดี'},
+   {zh:'服务', py:['fú','wù'], th:'บริการ', em:'🛎️', tip:'服务员 = พนักงานบริการ'},
+   {zh:'价格', py:['jià','gé'], th:'ราคา', em:'💲', tip:'ใช้ทางการกว่า 钱'},
+   {zh:'满意', py:['mǎn','yì'], th:'พอใจ', em:'😊', tip:'满 (เต็ม) + 意 (ใจ)'}
+  ],
+  grammar:{ title:'不但…，而且…', th:'ไม่เพียงแต่…แต่ยัง…',
+   parts:[{r:'subj',zh:'这家店',th:'ร้านนี้'},{r:'part',zh:'不但',th:'ไม่เพียงแต่'},{r:'verb',zh:'便宜',th:'ข้อแรก'},{r:'part',zh:'而且',th:'แต่ยัง'},{r:'verb',zh:'很干净',th:'ข้อเสริม'}],
+   examples:[
+    {lvl:'ง่าย', s:[['这家店','subj'],['不但','part'],['便宜','verb'],['，',''],['而且','part'],['很','part'],['干净','verb'],['。','']], py:'zhè jiā diàn búdàn piányi, érqiě hěn gānjìng', th:'ร้านนี้ไม่เพียงถูก แต่ยังสะอาดมาก'},
+    {lvl:'ง่าย', s:[['他','subj'],['不但','part'],['会','verb'],['说','verb'],['中文','obj'],['，',''],['而且','part'],['会','verb'],['说','verb'],['日语','obj'],['。','']], py:'tā búdàn huì shuō Zhōngwén, érqiě huì shuō Rìyǔ', th:'เขาไม่เพียงพูดจีนได้ แต่ยังพูดญี่ปุ่นได้'},
+    {lvl:'ปานกลาง', s:[['这里的','part'],['服务','subj'],['不但','part'],['好','verb'],['，',''],['而且','part'],['价格','subj'],['也','part'],['不','part'],['贵','verb'],['。','']], py:'zhèlǐ de fúwù búdàn hǎo, érqiě jiàgé yě bú guì', th:'บริการที่นี่ไม่เพียงดี แต่ราคายังไม่แพง'},
+    {lvl:'ใช้จริง', s:[['酒店','subj'],['不但','part'],['服务','subj'],['好','verb'],['，',''],['而且','part'],['早饭','subj'],['也','part'],['很','part'],['好吃','verb'],['。','']], py:'jiǔdiàn búdàn fúwù hǎo, érqiě zǎofàn yě hěn hǎochī', th:'โรงแรมไม่เพียงบริการดี แต่อาหารเช้ายังอร่อย'}
+   ],
+   use:'不但…而且… เรียงข้อดีหรือข้อมูลที่หนักขึ้นตามลำดับ ข้อหลังมักหนักกว่าข้อแรก เหมาะกับการเขียนรีวิวและเจรจาธุรกิจ',
+   trap:'ถ้าสองประโยคมีประธานเดียวกัน 不但 อยู่หลังประธาน แต่ถ้าประธานต่างกัน 不但 ต้องอยู่หน้าประธานตัวแรก และ 而且 มักตามด้วย 也 หรือ 还 เพื่อเน้น'},
+  dialog:[
+   {who:'คุณ', me:true, zh:'你觉得这家酒店怎么样？', py:'nǐ juéde zhè jiā jiǔdiàn zěnmeyàng?', th:'คุณคิดว่าโรงแรมนี้เป็นยังไง'},
+   {who:'เพื่อน', me:false, zh:'不但服务好，而且价格也不贵。', py:'búdàn fúwù hǎo, érqiě jiàgé yě bú guì', th:'ไม่เพียงบริการดี ราคายังไม่แพง'},
+   {who:'คุณ', me:true, zh:'房间呢？', py:'fángjiān ne?', th:'แล้วห้องล่ะ'},
+   {who:'เพื่อน', me:false, zh:'房间不但干净，而且很安静。', py:'fángjiān búdàn gānjìng, érqiě hěn ānjìng', th:'ห้องไม่เพียงสะอาด แต่ยังเงียบ'},
+   {who:'คุณ', me:true, zh:'我很满意，我们就订这家吧。', py:'wǒ hěn mǎnyì, wǒmen jiù dìng zhè jiā ba', th:'ฉันพอใจมาก เรามาจองที่นี่กัน'}
+  ]},
+{ id:'except', lv:6, em:'🚫', zh:'除了以外', th:'นอกจาก…(แล้ว)', py:'chúle yǐwài', scene:'ฉากนัดประชุม: เลือกวันเวลาและแบ่งหัวข้อคุย',
+  words:[
+   {zh:'除了', py:['chú','le'], th:'นอกจาก', em:'➖', tip:'ตัวนำของโครงสร้าง'},
+   {zh:'以外', py:['yǐ','wài'], th:'นอกเหนือ', em:'↗️', tip:'ภาษาพูดละได้'},
+   {zh:'同意', py:['tóng','yì'], th:'เห็นด้วย', em:'👍', tip:'同 (เหมือน) + 意 (ความคิด)'},
+   {zh:'建议', py:['jiàn','yì'], th:'เสนอแนะ', em:'💡', tip:'ให้ข้อเสนอแนะ'},
+   {zh:'讨论', py:['tǎo','lùn'], th:'อภิปราย / คุยกัน', em:'💬', tip:'讨 (ขอ) + 论 (ถกเถียง)'},
+   {zh:'安排', py:['ān','pái'], th:'จัดการ / จัดตาราง', em:'🗂️', tip:'安 (วาง) + 排 (เรียง)'}
+  ],
+  grammar:{ title:'除了…以外，都 / 还…', th:'นอกจาก…(ยกเว้น หรือ ยังมีเพิ่ม)',
+   parts:[{r:'part',zh:'除了',th:'นอกจาก'},{r:'obj',zh:'周日',th:'สิ่งที่ยกเว้น/เพิ่ม'},{r:'part',zh:'以外',th:'นอกเหนือ'},{r:'subj',zh:'我',th:'ฉัน'},{r:'part',zh:'都 / 还',th:'ทั้งหมด / ยัง'}],
+   examples:[
+    {lvl:'ง่าย', s:[['除了','part'],['周日','place'],['以外','part'],['，',''],['我','subj'],['每天','place'],['都','part'],['工作','verb'],['。','']], py:'chúle zhōurì yǐwài, wǒ měitiān dōu gōngzuò', th:'นอกจากวันอาทิตย์ ฉันทำงานทุกวัน'},
+    {lvl:'ง่าย', s:[['除了','part'],['我','obj'],['以外','part'],['，',''],['大家','subj'],['都','part'],['同意','verb'],['。','']], py:'chúle wǒ yǐwài, dàjiā dōu tóngyì', th:'นอกจากฉัน ทุกคนเห็นด้วย'},
+    {lvl:'ปานกลาง', s:[['除了','part'],['米饭','obj'],['以外','part'],['，',''],['我','subj'],['还','part'],['想','verb'],['吃','verb'],['面条','obj'],['。','']], py:'chúle mǐfàn yǐwài, wǒ hái xiǎng chī miàntiáo', th:'นอกจากข้าว ฉันยังอยากกินก๋วยเตี๋ยวด้วย'},
+    {lvl:'ใช้จริง', s:[['除了','part'],['价格','obj'],['以外','part'],['，',''],['我','subj'],['还','part'],['想','verb'],['讨论','verb'],['服务','obj'],['。','']], py:'chúle jiàgé yǐwài, wǒ hái xiǎng tǎolùn fúwù', th:'นอกจากราคา ฉันอยากคุยเรื่องบริการด้วย'}
+   ],
+   use:'除了…以外 + 都 = ยกเว้นสิ่งนั้น นอกนั้นเหมือนกันหมด ส่วน + 还/也 = นอกจากสิ่งนั้นแล้วยังมีอย่างอื่นเพิ่ม ความหมายขึ้นกับคำที่ตามมา',
+   trap:'ไทยใช้ "นอกจาก" ทั้งสองความหมาย จึงต้องดูคำที่ตามมาว่าเป็น 都 หรือ 还 และ 以外 มักละได้ในภาษาพูด'},
+  dialog:[
+   {who:'เพื่อน', me:false, zh:'我们什么时候开会？', py:'wǒmen shénme shíhou kāi huì?', th:'เราประชุมกันตอนไหน'},
+   {who:'คุณ', me:true, zh:'除了周一以外，哪天都可以。', py:'chúle zhōuyī yǐwài, nǎ tiān dōu kěyǐ', th:'นอกจากวันจันทร์ (周一) วันไหนก็ได้'},
+   {who:'เพื่อน', me:false, zh:'好。除了时间，我们还要讨论价格。', py:'hǎo. chúle shíjiān, wǒmen hái yào tǎolùn jiàgé', th:'ดี นอกจากเวลา เรายังต้องคุยเรื่องราคา'},
+   {who:'คุณ', me:true, zh:'我同意，我来安排。', py:'wǒ tóngyì, wǒ lái ānpái', th:'ฉันเห็นด้วย ฉันจะจัดการเอง'}
+  ]}
+];
+
+const LESSONS_L7 = [
+{ id:'evenif', lv:7, em:'🛡️', zh:'即使无论', th:'แม้ว่า…ก็…, ไม่ว่า…ก็…', py:'jíshǐ wúlùn', scene:'ฉากให้กำลังใจเพื่อน: เจองานยากแต่ไม่ยอมแพ้',
+  words:[
+   {zh:'即使', py:['jí','shǐ'], th:'แม้ว่า / ต่อให้', em:'🪨', tip:'ตั้งเงื่อนไขสุดโต่ง แล้วบอกว่าผลก็ไม่เปลี่ยน'},
+   {zh:'无论', py:['wú','lùn'], th:'ไม่ว่า', em:'♾️', tip:'ต้องมีคำถามหรือหลายทางเลือกตามหลัง'},
+   {zh:'困难', py:['kùn','nan'], th:'ยากลำบาก / อุปสรรค', em:'🧗', tip:'พยางค์หลัง nan เป็นเสียงเบา'},
+   {zh:'坚持', py:['jiān','chí'], th:'ยืนหยัด / ทำต่อไป', em:'🧱', tip:'坚 (แข็งแรง) + 持 (ถือไว้)'},
+   {zh:'放弃', py:['fàng','qì'], th:'ยอมแพ้ / เลิก', em:'🏳️', tip:'放 (ปล่อย) + 弃 (ทิ้ง)'},
+   {zh:'成功', py:['chéng','gōng'], th:'สำเร็จ', em:'🏆', tip:'ตรงข้ามคือ 失败 (ล้มเหลว)'}
+  ],
+  grammar:{ title:'即使…，也… / 无论…，都…', th:'ต่อให้…ก็…, ไม่ว่า…ก็…',
+   parts:[{r:'part',zh:'即使',th:'ต่อให้'},{r:'verb',zh:'很累',th:'เงื่อนไข'},{r:'subj',zh:'我',th:'ฉัน'},{r:'part',zh:'也',th:'ก็'},{r:'verb',zh:'要去',th:'ผลไม่เปลี่ยน'}],
+   examples:[
+    {lvl:'ง่าย', s:[['即使','part'],['很','part'],['累','verb'],['，',''],['我','subj'],['也','part'],['要','part'],['去','verb'],['。','']], py:'jíshǐ hěn lèi, wǒ yě yào qù', th:'ต่อให้เหนื่อยมาก ฉันก็จะไป'},
+    {lvl:'ง่าย', s:[['即使','part'],['下雨','verb'],['，',''],['他','subj'],['也','part'],['去','verb'],['跑步','verb'],['。','']], py:'jíshǐ xià yǔ, tā yě qù pǎobù', th:'ต่อให้ฝนตก เขาก็ไปวิ่ง'},
+    {lvl:'ปานกลาง', s:[['无论','part'],['多','part'],['难','verb'],['，',''],['我','subj'],['都','part'],['不','part'],['放弃','verb'],['。','']], py:'wúlùn duō nán, wǒ dōu bú fàngqì', th:'ไม่ว่ายากแค่ไหน ฉันก็ไม่ยอมแพ้'},
+    {lvl:'ใช้จริง', s:[['无论','part'],['谁','subj'],['来','verb'],['，',''],['我们','subj'],['都','part'],['欢迎','verb'],['。','']], py:'wúlùn shéi lái, wǒmen dōu huānyíng', th:'ไม่ว่าใครมา เราก็ยินดีต้อนรับ'}
+   ],
+   use:'即使…也… ตั้งเงื่อนไขที่สุดโต่งแล้วบอกว่าผลไม่เปลี่ยน ส่วน 无论…都… ใช้เมื่อมีหลายกรณีหรือคำถาม (谁 什么 多+คำคุณศัพท์ 还是) และผลเหมือนกันทุกกรณี',
+   trap:'ห้ามใช้ 即使 คู่กับ 但是 และ 无论 ต้องมี 都 หรือ 也 ในประโยคหลังเสมอ ถ้าไม่มีคำถามหรือตัวเลือกให้ใช้ 即使 แทน'},
+  dialog:[
+   {who:'เพื่อน', me:false, zh:'这个工作很困难，你还要做吗？', py:'zhège gōngzuò hěn kùnnan, nǐ hái yào zuò ma?', th:'งานนี้ยากมาก คุณจะยังทำอีกไหม'},
+   {who:'คุณ', me:true, zh:'即使很困难，我也要坚持。', py:'jíshǐ hěn kùnnan, wǒ yě yào jiānchí', th:'ต่อให้ยากมาก ฉันก็จะอดทนทำต่อ'},
+   {who:'เพื่อน', me:false, zh:'如果失败了呢？', py:'rúguǒ shībài le ne?', th:'ถ้าล้มเหลวล่ะ (失败 = ล้มเหลว)'},
+   {who:'คุณ', me:true, zh:'无论结果怎么样，我都不放弃。', py:'wúlùn jiéguǒ zěnmeyàng, wǒ dōu bú fàngqì', th:'ไม่ว่าผลเป็นอย่างไร ฉันก็ไม่ยอมแพ้'},
+   {who:'เพื่อน', me:false, zh:'我相信你会成功。', py:'wǒ xiāngxìn nǐ huì chénggōng', th:'ฉันเชื่อว่าคุณจะสำเร็จ'}
+  ]},
+{ id:'connect', lv:7, em:'🔗', zh:'然而因此', th:'ตัวเชื่อมภาษาเขียน', py:'rán\'ér yīncǐ', scene:'ฉากเขียนอีเมลและบทความสั้น: เชื่อมความคิดให้เป็นทางการ',
+  words:[
+   {zh:'然而', py:['rán','ér'], th:'อย่างไรก็ตาม', em:'↪️', tip:'ภาษาเขียนของ 但是'},
+   {zh:'因此', py:['yīn','cǐ'], th:'ด้วยเหตุนี้', em:'🧮', tip:'นำผลลัพธ์ ไม่ใช่เหตุผล'},
+   {zh:'否则', py:['fǒu','zé'], th:'มิฉะนั้น', em:'⚠️', tip:'ตามหลังสิ่งที่ควรทำ แล้วบอกผลถ้าไม่ทำ'},
+   {zh:'尤其', py:['yóu','qí'], th:'โดยเฉพาะอย่างยิ่ง', em:'🔦', tip:'ชี้จุดเด่นจากกลุ่มที่พูดถึง'},
+   {zh:'其实', py:['qí','shí'], th:'ที่จริงแล้ว', em:'🪞', tip:'แก้ภาพที่เข้าใจผิด'},
+   {zh:'例如', py:['lì','rú'], th:'ตัวอย่างเช่น', em:'📌', tip:'ยกตัวอย่าง คล้าย 比如'}
+  ],
+  grammar:{ title:'然而 / 因此 / 否则', th:'ตัวเชื่อมข้อความแบบทางการ',
+   parts:[{r:'obj',zh:'ข้อมูลแรก',th:'ประโยคแรก'},{r:'part',zh:'然而 / 因此 / 否则',th:'ตัวเชื่อม'},{r:'verb',zh:'ประโยคต่อไป',th:'ประโยคที่สอง'}],
+   examples:[
+    {lvl:'ง่าย', s:[['这个','part'],['方法','subj'],['很','part'],['简单','verb'],['，',''],['然而','part'],['没有','verb'],['人','subj'],['用','verb'],['。','']], py:'zhège fāngfǎ hěn jiǎndān, rán\'ér méiyǒu rén yòng', th:'วิธีนี้ง่ายมาก อย่างไรก็ตามไม่มีใครใช้'},
+    {lvl:'ง่าย', s:[['天气','subj'],['不','part'],['好','verb'],['，',''],['因此','part'],['比赛','subj'],['取消','verb'],['了','part'],['。','']], py:'tiānqì bù hǎo, yīncǐ bǐsài qǔxiāo le', th:'อากาศไม่ดี ด้วยเหตุนี้การแข่งขันจึงถูกยกเลิก'},
+    {lvl:'ปานกลาง', s:[['请','verb'],['早','part'],['点儿','part'],['睡','verb'],['，',''],['否则','part'],['明天','place'],['会','part'],['很','part'],['累','verb'],['。','']], py:'qǐng zǎo diǎnr shuì, fǒuzé míngtiān huì hěn lèi', th:'กรุณานอนเร็วหน่อย มิฉะนั้นพรุ่งนี้จะเหนื่อยมาก'},
+    {lvl:'ใช้จริง', s:[['我','subj'],['喜欢','verb'],['运动','obj'],['，',''],['尤其','part'],['喜欢','verb'],['游泳','obj'],['。','']], py:'wǒ xǐhuan yùndòng, yóuqí xǐhuan yóuyǒng', th:'ฉันชอบออกกำลังกาย โดยเฉพาะว่ายน้ำ'}
+   ],
+   use:'然而 = พลิกความหมายแบบทางการ 因此 = บอกผลลัพธ์ 否则 = ถ้าไม่ทำตามนั้นจะเกิดผลเสีย ทั้งหมดอยู่ต้นประโยคที่สอง ใช้ในอีเมล รายงาน บทความ',
+   trap:'因此 นำผลลัพธ์เท่านั้น ต่างจาก 因为 ที่นำเหตุผล และ 否则 ห้ามวางต้นเรื่องโดยไม่มีประโยคเงื่อนไขนำหน้า ในภาษาพูดคนมักใช้ 但是 / 所以 / 不然 แทน'},
+  dialog:[
+   {who:'เพื่อน', me:false, zh:'你为什么学中文？', py:'nǐ wèishénme xué Zhōngwén?', th:'ทำไมคุณเรียนภาษาจีน'},
+   {who:'คุณ', me:true, zh:'其实我喜欢中国文化，例如茶和书法。', py:'qíshí wǒ xǐhuan Zhōngguó wénhuà, lìrú chá hé shūfǎ', th:'จริง ๆ ฉันชอบวัฒนธรรมจีน เช่น ชาและการเขียนพู่กัน (书法)'},
+   {who:'เพื่อน', me:false, zh:'听起来不错。', py:'tīng qǐlái búcuò', th:'ฟังดูดีนะ'},
+   {who:'คุณ', me:true, zh:'是啊，尤其是历史。', py:'shì a, yóuqí shì lìshǐ', th:'ใช่ โดยเฉพาะประวัติศาสตร์ (历史)'}
+  ]},
+{ id:'idiom', lv:7, em:'🐉', zh:'成语', th:'สำนวนสี่คำ', py:'chéngyǔ', scene:'ฉากพูดคุยกับคนจีน: ใช้สำนวนให้เป็นธรรมชาติ',
+  words:[
+   {zh:'一举两得', py:['yì','jǔ','liǎng','dé'], th:'ได้สองอย่างในครั้งเดียว', em:'🎯', tip:'เทียบ ยิงปืนนัดเดียวได้นกสองตัว'},
+   {zh:'入乡随俗', py:['rù','xiāng','suí','sú'], th:'เข้าเมืองตาหลิ่ว ต้องหลิ่วตาตาม', em:'🧭', tip:'ปรับตัวตามธรรมเนียมที่ไปอยู่'},
+   {zh:'半途而废', py:['bàn','tú','ér','fèi'], th:'ทำครึ่งทางแล้วเลิก', em:'🚧', tip:'半途 = กลางทาง 废 = ทิ้ง/เลิก'},
+   {zh:'熟能生巧', py:['shú','néng','shēng','qiǎo'], th:'ชำนาญแล้วจะเก่ง ฝึกบ่อยก็ดีเอง', em:'🎻', tip:'熟 = คุ้นชำนาญ 巧 = ชำนาญ ฉลาด'},
+   {zh:'事半功倍', py:['shì','bàn','gōng','bèi'], th:'ลงแรงครึ่งเดียว ได้ผลเท่าตัว', em:'🔋', tip:'ตรงข้ามคือ 事倍功半 (ลงแรงมากได้ผลน้อย)'},
+   {zh:'十全十美', py:['shí','quán','shí','měi'], th:'สมบูรณ์แบบ', em:'🥇', tip:'ทุกด้านดีหมด มักใช้เชิงปฏิเสธ เช่น 没有十全十美'}
+  ],
+  grammar:{ title:'ใช้สำนวนในประโยค', th:'สำนวนสี่คำใช้เป็นกริยา คำคุณศัพท์ หรือกรรม',
+   parts:[{r:'subj',zh:'这样做',th:'ประธาน'},{r:'part',zh:'真是',th:'ช่างเป็น'},{r:'verb',zh:'一举两得',th:'สำนวนเป็นคำกริยา/วิเศษณ์'}],
+   examples:[
+    {lvl:'ง่าย', s:[['这样','part'],['做','verb'],['真','part'],['是','verb'],['一举两得','verb'],['。','']], py:'zhèyàng zuò zhēn shì yì jǔ liǎng dé', th:'ทำแบบนี้ช่างได้สองต่อจริง ๆ'},
+    {lvl:'ง่าย', s:[['学','verb'],['语言','obj'],['要','part'],['熟能生巧','verb'],['。','']], py:'xué yǔyán yào shú néng shēng qiǎo', th:'เรียนภาษาต้องฝึกบ่อยจึงจะเก่ง'},
+    {lvl:'ปานกลาง', s:[['到','verb'],['了','part'],['中国','place'],['，',''],['要','part'],['入乡随俗','verb'],['。','']], py:'dào le Zhōngguó, yào rù xiāng suí sú', th:'ไปถึงจีนแล้วต้องปรับตัวตามธรรมเนียม'},
+    {lvl:'ใช้จริง', s:[['做','verb'],['事','obj'],['不','part'],['要','part'],['半途而废','verb'],['。','']], py:'zuò shì bú yào bàn tú ér fèi', th:'ทำงานอย่าทำครึ่ง ๆ กลาง ๆ แล้วเลิก'}
+   ],
+   use:'สำนวนสี่ตัวมาจากเรื่องเก่าและมีความหมายคงที่ ห้ามสลับตัวอักษรหรือเปลี่ยนคำ ใช้เป็นคำกริยา วิเศษณ์ หรือคำคุณศัพท์ในประโยคได้ และใช้ 真是 หรือ 要 นำได้',
+   trap:'อย่าแปลทีละคำ ต้องจำความหมายทั้งก้อน และใช้เท่าที่มั่นใจในบริบท ในงานเขียนทางการและพูดทั่วไปมักใช้ได้ แต่ถ้าใช้ผิดโอกาสจะฟังแปลก'},
+  dialog:[
+   {who:'เพื่อน', me:false, zh:'我想一边工作一边学中文。', py:'wǒ xiǎng yìbiān gōngzuò yìbiān xué Zhōngwén', th:'ฉันอยากทำงานไปด้วยเรียนภาษาจีนไปด้วย'},
+   {who:'คุณ', me:true, zh:'这真是一举两得。', py:'zhè zhēn shì yì jǔ liǎng dé', th:'นี่ได้สองต่อจริง ๆ'},
+   {who:'เพื่อน', me:false, zh:'可是我怕半途而废。', py:'kěshì wǒ pà bàn tú ér fèi', th:'แต่ฉันกลัวจะเลิกกลางทาง'},
+   {who:'คุณ', me:true, zh:'别担心，熟能生巧。', py:'bié dānxīn, shú néng shēng qiǎo', th:'อย่ากังวล ฝึกบ่อยก็เก่งเอง'},
+   {who:'เพื่อน', me:false, zh:'对，坚持就会事半功倍。', py:'duì, jiānchí jiù huì shì bàn gōng bèi', th:'ใช่ ถ้าอดทนจะได้ผลเท่าตัว'}
+  ]}
+];
+const LESSONS_L8 = [
+{ id:'view', lv:8, em:'👁️', zh:'在我看来', th:'แสดงความเห็นและมุมมอง', py:'zài wǒ kànlái', scene:'ฉากประชุมทีม: คุยความเห็นเรื่องแผนงานใหม่',
+  words:[
+   {zh:'观点', py:['guān','diǎn'], th:'ทัศนะ / จุดยืน', em:'🔭', tip:'观 (มอง) + 点 (จุด)'},
+   {zh:'看法', py:['kàn','fǎ'], th:'ความเห็น', em:'🗨️', tip:'有什么看法 = มีความเห็นอย่างไร'},
+   {zh:'角度', py:['jiǎo','dù'], th:'มุมมอง', em:'📐', tip:'从…角度 = จากมุมของ…'},
+   {zh:'认为', py:['rèn','wéi'], th:'เห็นว่า / คิดว่า', em:'🧠', tip:'ทางการกว่า 觉得'},
+   {zh:'支持', py:['zhī','chí'], th:'สนับสนุน', em:'🫶', tip:'支 (ค้ำ) + 持 (ถือ)'},
+   {zh:'反对', py:['fǎn','duì'], th:'คัดค้าน', em:'🙅', tip:'反 (ตรงข้าม) + 对 (ถูก/ต่อ)'}
+  ],
+  grammar:{ title:'在…看来 / 对…来说 / 从…角度', th:'บอกมุมมองของใครหรือกลุ่มใด',
+   parts:[{r:'part',zh:'在',th:'ใน'},{r:'subj',zh:'我',th:'ฉัน'},{r:'verb',zh:'看来',th:'เมื่อมองดู'},{r:'obj',zh:'ความเห็น',th:'ประโยคความเห็น'}],
+   examples:[
+    {lvl:'ง่าย', s:[['在','part'],['我','subj'],['看来','verb'],['，',''],['这个','part'],['办法','subj'],['很','part'],['好','verb'],['。','']], py:'zài wǒ kànlái, zhège bànfǎ hěn hǎo', th:'ในความเห็นของฉัน วิธีนี้ดีมาก'},
+    {lvl:'ง่าย', s:[['对','part'],['学生','subj'],['来说','verb'],['，',''],['时间','subj'],['最','part'],['重要','verb'],['。','']], py:'duì xuésheng láishuō, shíjiān zuì zhòngyào', th:'สำหรับนักเรียน เวลาสำคัญที่สุด'},
+    {lvl:'ปานกลาง', s:[['从','part'],['这个','part'],['角度','obj'],['看','verb'],['，',''],['他','subj'],['是','verb'],['对','verb'],['的','part'],['。','']], py:'cóng zhège jiǎodù kàn, tā shì duì de', th:'มองจากมุมนี้ เขาถูก'},
+    {lvl:'ใช้จริง', s:[['大多数','part'],['人','subj'],['认为','verb'],['，',''],['价格','subj'],['太','part'],['高','verb'],['了','part'],['。','']], py:'dàduōshù rén rènwéi, jiàgé tài gāo le', th:'คนส่วนใหญ่เห็นว่า ราคาสูงเกินไป'}
+   ],
+   use:'在我看来 ใช้แสดงความเห็นส่วนตัว 对…来说 ใช้บอกมุมมองของบุคคลหรือกลุ่ม 从…角度看 ใช้ชี้มุมที่มอง',
+   trap:'ห้ามพูด 在我看来 ซ้อนกับ 我认为 ในประโยคเดียว และ 在…看来 ใช้กับความเห็น ไม่ใช้กับข้อเท็จจริงทั่วไป'},
+  dialog:[
+   {who:'คุณ', me:true, zh:'你对这个计划有什么看法？', py:'nǐ duì zhège jìhuà yǒu shénme kànfǎ?', th:'คุณมีความเห็นอย่างไรต่อแผนนี้ (计划 = แผน)'},
+   {who:'เพื่อนร่วมงาน', me:false, zh:'在我看来，它很有价值。', py:'zài wǒ kànlái, tā hěn yǒu jiàzhí', th:'ในความเห็นฉัน มันมีคุณค่ามาก (价值 = คุณค่า)'},
+   {who:'คุณ', me:true, zh:'但是有人反对。', py:'dànshì yǒu rén fǎnduì', th:'แต่มีคนคัดค้าน'},
+   {who:'เพื่อนร่วมงาน', me:false, zh:'对他们来说，风险太大了。', py:'duì tāmen láishuō, fēngxiǎn tài dà le', th:'สำหรับพวกเขา ความเสี่ยงสูงเกินไป (风险 = ความเสี่ยง)'},
+   {who:'คุณ', me:true, zh:'我支持你的观点。', py:'wǒ zhīchí nǐ de guāndiǎn', th:'ฉันสนับสนุนทัศนะของคุณ'}
+  ]},
+{ id:'because', lv:8, em:'⚙️', zh:'之所以', th:'เหตุผลเชิงลึกและผลกระทบ', py:'zhī suǒyǐ', scene:'ฉากอธิบายปรากฏการณ์: ครูอธิบายเหตุและผลให้นักเรียน',
+  words:[
+   {zh:'之所以', py:['zhī','suǒ','yǐ'], th:'ที่…ก็เพราะ', em:'🔬', tip:'นำผล แล้ว 是因为 นำเหตุ'},
+   {zh:'既然', py:['jì','rán'], th:'ในเมื่อ', em:'🧷', tip:'นำเหตุที่เป็นจริงแล้ว'},
+   {zh:'影响', py:['yǐng','xiǎng'], th:'ส่งผลกระทบ', em:'🌊', tip:'影 (เงา) + 响 (เสียงก้อง) = ผลที่ตามมา (เรื่องช่วยจำ)'},
+   {zh:'导致', py:['dǎo','zhì'], th:'ทำให้เกิด', em:'🧨', tip:'导 (นำ) + 致 (ถึง) มักใช้กับผลไม่ดี'},
+   {zh:'结果', py:['jié','guǒ'], th:'ผลลัพธ์', em:'📊', tip:'结果 ยังใช้เป็นคำเชื่อมว่า "ผลคือ"'},
+   {zh:'现象', py:['xiàn','xiàng'], th:'ปรากฏการณ์', em:'🌈', tip:'社会现象 = ปรากฏการณ์ทางสังคม'}
+  ],
+  grammar:{ title:'之所以…，是因为… / 既然…，就…', th:'อธิบายเหตุผลย้อนกลับและเหตุที่เป็นจริงแล้ว',
+   parts:[{r:'subj',zh:'他',th:'เขา'},{r:'part',zh:'之所以',th:'ที่…ก็'},{r:'verb',zh:'迟到',th:'ผล'},{r:'part',zh:'是因为',th:'เพราะว่า'},{r:'obj',zh:'堵车',th:'เหตุ'}],
+   examples:[
+    {lvl:'ง่าย', s:[['他','subj'],['之所以','part'],['迟到','verb'],['，',''],['是因为','part'],['堵车','verb'],['。','']], py:'tā zhīsuǒyǐ chídào, shì yīnwèi dǔchē', th:'ที่เขามาสายก็เพราะรถติด'},
+    {lvl:'ปานกลาง', s:[['我们','subj'],['之所以','part'],['成功','verb'],['，',''],['是因为','part'],['大家','subj'],['都','part'],['努力','verb'],['。','']], py:'wǒmen zhīsuǒyǐ chénggōng, shì yīnwèi dàjiā dōu nǔlì', th:'ที่เราสำเร็จก็เพราะทุกคนทุ่มเท'},
+    {lvl:'ปานกลาง', s:[['既然','part'],['你','subj'],['同意','verb'],['了','part'],['，',''],['我们','subj'],['就','part'],['开始','verb'],['吧','part'],['。','']], py:'jìrán nǐ tóngyì le, wǒmen jiù kāishǐ ba', th:'ในเมื่อคุณเห็นด้วยแล้ว เราก็เริ่มกันเถอะ'},
+    {lvl:'ใช้จริง', s:[['睡','verb'],['得','part'],['太','part'],['少','verb'],['会','part'],['影响','verb'],['健康','obj'],['，',''],['导致','verb'],['很','part'],['多','verb'],['问题','obj'],['。','']], py:'shuì de tài shǎo huì yǐngxiǎng jiànkāng, dǎozhì hěn duō wèntí', th:'นอนน้อยเกินไปส่งผลต่อสุขภาพ และทำให้เกิดปัญหามากมาย'}
+   ],
+   use:'之所以…是因为… กลับลำดับเป็นผลก่อนเหตุทีหลัง ใช้เน้นผลหรือเมื่ออธิบายเหตุผลให้ชัด 既然 ใช้นำสิ่งที่เป็นจริงแล้ว แล้วสรุปว่าควรทำอะไรต่อ 导致 นำผลที่มักไม่ดี',
+   trap:'ห้ามใช้ 之所以 คู่กับ 所以 เพราะซ้ำซ้อน และ 既然 ใช้กับเหตุที่เป็นจริงแล้ว ต่างจาก 如果 ที่เป็นเงื่อนไขสมมติ'},
+  dialog:[
+   {who:'คุณ', me:true, zh:'这个现象为什么出现？', py:'zhège xiànxiàng wèishénme chūxiàn?', th:'ปรากฏการณ์นี้เกิดขึ้นได้อย่างไร (出现 = ปรากฏ)'},
+   {who:'ครู', me:false, zh:'之所以出现，是因为天气变化。', py:'zhīsuǒyǐ chūxiàn, shì yīnwèi tiānqì biànhuà', th:'ที่มันเกิดขึ้นก็เพราะอากาศเปลี่ยน (变化 = เปลี่ยนแปลง)'},
+   {who:'คุณ', me:true, zh:'它会影响农业吗？', py:'tā huì yǐngxiǎng nóngyè ma?', th:'มันจะกระทบการเกษตรไหม (农业 = เกษตรกรรม)'},
+   {who:'ครู', me:false, zh:'会，还可能导致价格上升。', py:'huì, hái kěnéng dǎozhì jiàgé shàngshēng', th:'จะกระทบ และอาจทำให้ราคาสูงขึ้น (上升 = สูงขึ้น)'}
+  ]},
+{ id:'rather', lv:8, em:'⚖️', zh:'与其不如', th:'เปรียบเทียบการเลือก', py:'yǔqí bùrú', scene:'ฉากเลือกวิธีเดินทาง: ตัดสินใจระหว่างสองทางเลือก',
+  words:[
+   {zh:'与其', py:['yǔ','qí'], th:'แทนที่จะ', em:'🔙', tip:'ตัวที่ไม่เลือก'},
+   {zh:'不如', py:['bù','rú'], th:'สู้…ดีกว่า', em:'✨', tip:'ตัวที่เลือก'},
+   {zh:'宁可', py:['nìng','kě'], th:'ยอม…ดีกว่า', em:'🚏', tip:'ยอมเสียสิ่งหนึ่งเพื่อไม่ต้องรับอีกสิ่ง'},
+   {zh:'选择', py:['xuǎn','zé'], th:'เลือก / ตัวเลือก', em:'🎚️', tip:'做选择 = ตัดสินใจเลือก'},
+   {zh:'价值', py:['jià','zhí'], th:'คุณค่า', em:'💠', tip:'有价值 = มีคุณค่า'},
+   {zh:'意义', py:['yì','yì'], th:'ความหมาย / ความสำคัญ', em:'🧿', tip:'有意义 = มีความหมาย'}
+  ],
+  grammar:{ title:'与其…，不如… / 宁可…，也不…', th:'บอกว่าเลือกอย่างไหนดีกว่า',
+   parts:[{r:'part',zh:'与其',th:'แทนที่จะ'},{r:'verb',zh:'ทางเลือก A',th:'ตัวที่ไม่เลือก'},{r:'part',zh:'不如',th:'สู้'},{r:'verb',zh:'ทางเลือก B',th:'ตัวที่เลือก'}],
+   examples:[
+    {lvl:'ง่าย', s:[['与其','part'],['在','part'],['家','place'],['玩','verb'],['手机','obj'],['，',''],['不如','part'],['出去','verb'],['走走','verb'],['。','']], py:'yǔqí zài jiā wán shǒujī, bùrú chūqù zǒuzou', th:'แทนที่จะอยู่บ้านเล่นมือถือ สู้ออกไปเดินเล่นดีกว่า'},
+    {lvl:'ปานกลาง', s:[['与其','part'],['等','verb'],['别人','subj'],['帮忙','verb'],['，',''],['不如','part'],['自己','subj'],['做','verb'],['。','']], py:'yǔqí děng biérén bāngmáng, bùrú zìjǐ zuò', th:'แทนที่จะรอให้คนอื่นช่วย สู้ทำเองดีกว่า'},
+    {lvl:'ปานกลาง', s:[['我','subj'],['宁可','part'],['走路','verb'],['，',''],['也','part'],['不','part'],['坐','verb'],['那','part'],['辆','part'],['车','obj'],['。','']], py:'wǒ nìngkě zǒulù, yě bú zuò nà liàng chē', th:'ฉันยอมเดินดีกว่า ไม่ขึ้นรถคันนั้น'},
+    {lvl:'ใช้จริง', s:[['他','subj'],['宁可','part'],['少','part'],['睡觉','verb'],['，',''],['也','part'],['要','part'],['完成','verb'],['工作','obj'],['。','']], py:'tā nìngkě shǎo shuìjiào, yě yào wánchéng gōngzuò', th:'เขายอมนอนน้อย แต่ก็ต้องทำงานให้เสร็จ'}
+   ],
+   use:'与其 A，不如 B = A ไม่ดีเท่า B (B คือตัวที่เลือก) ส่วน 宁可 A，也不 B = ยอมรับ A เพื่อไม่ต้องรับ B และ 宁可 A，也要 B = ยอมเสีย A เพื่อให้ได้ B',
+   trap:'คนไทยมักสลับกัน ตัวที่ตามหลัง 与其 คือสิ่งที่ไม่เลือก และตัวที่ตามหลัง 不如 คือสิ่งที่เลือก ส่วน 宁可 ตัวแรกคือสิ่งที่ยอมรับได้'},
+  dialog:[
+   {who:'เพื่อน', me:false, zh:'我们坐飞机还是坐火车？', py:'wǒmen zuò fēijī háishi zuò huǒchē?', th:'เรานั่งเครื่องบินหรือรถไฟ'},
+   {who:'คุณ', me:true, zh:'与其坐飞机，不如坐火车，风景更好。', py:'yǔqí zuò fēijī, bùrú zuò huǒchē, fēngjǐng gèng hǎo', th:'แทนที่จะนั่งเครื่องบิน สู้นั่งรถไฟดีกว่า วิวดีกว่า'},
+   {who:'เพื่อน', me:false, zh:'可是火车太慢了。', py:'kěshì huǒchē tài màn le', th:'แต่รถไฟช้าเกินไป'},
+   {who:'คุณ', me:true, zh:'我宁可慢一点儿，也不想太累。', py:'wǒ nìngkě màn yìdiǎnr, yě bù xiǎng tài lèi', th:'ฉันยอมช้าหน่อยดีกว่า ไม่อยากเหนื่อยเกินไป'},
+   {who:'เพื่อน', me:false, zh:'好，这个选择很有意义。', py:'hǎo, zhège xuǎnzé hěn yǒu yìyì', th:'ได้ ตัวเลือกนี้มีความหมายดี'}
+  ]}
+];
+const LESSONS_L9 = [
+{ id:'news', lv:9, em:'📰', zh:'据报道', th:'ภาษาข่าวและการอ้างแหล่งข่าว', py:'jù bàodào', scene:'ฉากอ่านข่าว: คุยกันเรื่องนโยบายใหม่ของรัฐและบริษัท',
+  words:[
+   {zh:'据', py:['jù'], th:'ตามที่ (แหล่งข่าว)', em:'🔖', tip:'นำแหล่งข่าวหรือแหล่งข้อมูล'},
+   {zh:'报道', py:['bào','dào'], th:'รายงานข่าว', em:'🗞️', tip:'ใช้เป็นทั้งกริยาและนาม'},
+   {zh:'表示', py:['biǎo','shì'], th:'แสดงออก / ให้ความเห็น', em:'📣', tip:'ในข่าวใช้แทน 说'},
+   {zh:'宣布', py:['xuān','bù'], th:'ประกาศ', em:'📢', tip:'宣 (ประกาศ) + 布 (แจ้ง)'},
+   {zh:'发展', py:['fā','zhǎn'], th:'พัฒนา', em:'🌱', tip:'ใช้กับเศรษฐกิจ สังคม ธุรกิจ'},
+   {zh:'政策', py:['zhèng','cè'], th:'นโยบาย', em:'🏛️', tip:'政 (การปกครอง) + 策 (แผน)'}
+  ],
+  grammar:{ title:'据 + แหล่งข่าว + 报道 / 介绍，…', th:'อ้างแหล่งข่าวในภาษาข่าว',
+   parts:[{r:'part',zh:'据',th:'ตามที่'},{r:'subj',zh:'报道',th:'แหล่งข่าว'},{r:'obj',zh:'เนื้อข่าว',th:'ข้อความข่าว'}],
+   examples:[
+    {lvl:'ง่าย', s:[['据','part'],['报道','verb'],['，',''],['明天','place'],['会','part'],['有','verb'],['大雨','obj'],['。','']], py:'jù bàodào, míngtiān huì yǒu dàyǔ', th:'ตามรายงานข่าว พรุ่งนี้จะมีฝนตกหนัก'},
+    {lvl:'ปานกลาง', s:[['公司','subj'],['表示','verb'],['，',''],['将','part'],['继续','verb'],['发展','verb'],['新','part'],['产品','obj'],['。','']], py:'gōngsī biǎoshì, jiāng jìxù fāzhǎn xīn chǎnpǐn', th:'บริษัทแถลงว่า จะพัฒนาผลิตภัณฑ์ใหม่ต่อไป'},
+    {lvl:'ปานกลาง', s:[['政府','subj'],['昨天','place'],['宣布','verb'],['了','part'],['新','part'],['的','part'],['计划','obj'],['。','']], py:'zhèngfǔ zuótiān xuānbù le xīn de jìhuà', th:'รัฐบาลประกาศแผนใหม่เมื่อวาน'},
+    {lvl:'ใช้จริง', s:[['据','part'],['专家','subj'],['介绍','verb'],['，',''],['这','part'],['项','part'],['政策','subj'],['将','part'],['在','part'],['明年','place'],['实施','verb'],['。','']], py:'jù zhuānjiā jièshào, zhè xiàng zhèngcè jiāng zài míngnián shíshī', th:'ตามที่ผู้เชี่ยวชาญแนะนำ นโยบายนี้จะบังคับใช้ปีหน้า (专家 = ผู้เชี่ยวชาญ 实施 = บังคับใช้)'}
+   ],
+   use:'ภาษาข่าวมักเริ่มด้วย 据…报道 เพื่อบอกที่มา และใช้ 将 แทน 会/要 ในความหมายอนาคต ใช้ 表示 และ 宣布 แทน 说 เมื่ออ้างคำพูดหรือการประกาศ',
+   trap:'据 ใช้กับแหล่งข่าว ไม่ใช้กับความเห็นตัวเอง (ไม่พูด 据我说) และ 将 เป็นภาษาเขียน ในบทสนทนาทั่วไปพูดว่า 会 หรือ 要'},
+  dialog:[
+   {who:'คุณ', me:true, zh:'今天的新闻有什么？', py:'jīntiān de xīnwén yǒu shénme?', th:'วันนี้ข่าวมีอะไรบ้าง'},
+   {who:'เพื่อน', me:false, zh:'据报道，政府宣布了新政策。', py:'jù bàodào, zhèngfǔ xuānbù le xīn zhèngcè', th:'ตามรายงาน รัฐบาลประกาศนโยบายใหม่'},
+   {who:'คุณ', me:true, zh:'公司有什么表示吗？', py:'gōngsī yǒu shénme biǎoshì ma?', th:'บริษัทมีความเห็นอะไรไหม'},
+   {who:'เพื่อน', me:false, zh:'公司表示，会支持这个政策。', py:'gōngsī biǎoshì, huì zhīchí zhège zhèngcè', th:'บริษัทแถลงว่าจะสนับสนุนนโยบายนี้'},
+   {who:'คุณ', me:true, zh:'这对经济发展有帮助吗？', py:'zhè duì jīngjì fāzhǎn yǒu bāngzhù ma?', th:'นี่ช่วยการพัฒนาเศรษฐกิจไหม (经济 = เศรษฐกิจ 帮助 = ช่วยเหลือ)'}
+  ]},
+{ id:'thereby', lv:9, em:'🧩', zh:'从而以便', th:'จุดประสงค์และผลตามมาแบบทางการ', py:'cóng\'ér yǐbiàn', scene:'ฉากประชุมความร่วมมือ: สองฝ่ายวางแผนทำงานร่วมกัน',
+  words:[
+   {zh:'从而', py:['cóng','ér'], th:'จึงทำให้ / ด้วยเหตุนี้', em:'🪢', tip:'นำผลที่เกิดจากการกระทำก่อนหน้า'},
+   {zh:'以便', py:['yǐ','biàn'], th:'เพื่อให้สะดวก', em:'🗝️', tip:'นำจุดประสงค์ที่ทำให้ขั้นต่อไปง่ายขึ้น'},
+   {zh:'进行', py:['jìn','xíng'], th:'ดำเนินการ', em:'🛤️', tip:'ตามด้วยกริยาสองพยางค์เท่านั้น'},
+   {zh:'实现', py:['shí','xiàn'], th:'ทำให้เป็นจริง', em:'🪄', tip:'实现目标 = บรรลุเป้าหมาย'},
+   {zh:'推动', py:['tuī','dòng'], th:'ผลักดัน', em:'🛷', tip:'推 (ผลัก) + 动 (เคลื่อน)'},
+   {zh:'并', py:['bìng'], th:'และ (เชื่อมกริยา)', em:'➗', tip:'ใช้เชื่อมกริยาที่ประธานเดียวกัน'}
+  ],
+  grammar:{ title:'从而 / 以便 / 进行 / 并', th:'ตัวเชื่อมและกริยาทางการ',
+   parts:[{r:'subj',zh:'我们',th:'ประธาน'},{r:'verb',zh:'努力学习',th:'การกระทำ'},{r:'part',zh:'从而',th:'จึง'},{r:'verb',zh:'实现目标',th:'ผลที่ตามมา'}],
+   examples:[
+    {lvl:'ง่าย', s:[['我们','subj'],['要','part'],['努力','verb'],['学习','verb'],['，',''],['从而','part'],['实现','verb'],['自己','part'],['的','part'],['目标','obj'],['。','']], py:'wǒmen yào nǔlì xuéxí, cóng\'ér shíxiàn zìjǐ de mùbiāo', th:'เราต้องตั้งใจเรียน เพื่อให้บรรลุเป้าหมายของตัวเอง (目标 = เป้าหมาย)'},
+    {lvl:'ปานกลาง', s:[['请','verb'],['提前','part'],['预订','verb'],['，',''],['以便','part'],['我们','subj'],['做','verb'],['好','verb'],['安排','obj'],['。','']], py:'qǐng tíqián yùdìng, yǐbiàn wǒmen zuòhǎo ānpái', th:'กรุณาจองล่วงหน้า เพื่อให้เราจัดการได้สะดวก'},
+    {lvl:'ปานกลาง', s:[['双方','subj'],['将','part'],['进行','verb'],['讨论','verb'],['，',''],['并','part'],['签订','verb'],['合同','obj'],['。','']], py:'shuāngfāng jiāng jìnxíng tǎolùn, bìng qiāndìng hétong', th:'ทั้งสองฝ่ายจะหารือกัน และลงนามในสัญญา (双方 = สองฝ่าย 签订 = ลงนาม)'},
+    {lvl:'ใช้จริง', s:[['新','part'],['技术','subj'],['推动','verb'],['了','part'],['经济','obj'],['发展','verb'],['。','']], py:'xīn jìshù tuīdòng le jīngjì fāzhǎn', th:'เทคโนโลยีใหม่ผลักดันการพัฒนาเศรษฐกิจ (技术 = เทคโนโลยี)'}
+   ],
+   use:'从而 นำผลที่เกิดตามมา 以便 นำจุดประสงค์เพื่อความสะดวกของขั้นต่อไป 进行 ใช้ร่วมกับนามกริยาสองพยางค์ เช่น 进行讨论 และ 并 เชื่อมกริยาที่ประธานเดียวกัน',
+   trap:'进行 ห้ามตามด้วยกริยาพยางค์เดียว เช่น 进行吃 และ 并 เชื่อมประโยคที่ประธานเดียวกัน ไม่ใช้เชื่อมประโยคที่ประธานต่างกัน และ 以便 ไม่ใช้บอกเหตุผล'},
+  dialog:[
+   {who:'ผู้จัดการ', me:false, zh:'我们需要进行一次讨论。', py:'wǒmen xūyào jìnxíng yí cì tǎolùn', th:'เราต้องหารือกันสักครั้ง (需要 = ต้องการ)'},
+   {who:'คุณ', me:true, zh:'好，我提前准备，以便节省时间。', py:'hǎo, wǒ tíqián zhǔnbèi, yǐbiàn jiéshěng shíjiān', th:'ได้ ฉันเตรียมล่วงหน้า เพื่อประหยัดเวลา (节省 = ประหยัด)'},
+   {who:'ผู้จัดการ', me:false, zh:'目标是推动合作，并实现共同发展。', py:'mùbiāo shì tuīdòng hézuò, bìng shíxiàn gòngtóng fāzhǎn', th:'เป้าหมายคือผลักดันความร่วมมือ และบรรลุการพัฒนาร่วมกัน (合作 = ร่วมมือ 共同 = ร่วมกัน)'},
+   {who:'คุณ', me:true, zh:'明白了。', py:'míngbai le', th:'เข้าใจแล้ว'}
+  ]},
+{ id:'admit', lv:9, em:'🖋️', zh:'固然', th:'ภาษาเขียนระดับสูง', py:'gùrán', scene:'ฉากอภิปรายสินค้า: ชั่งน้ำหนักข้อดีข้อเสียแบบมีเหตุผล',
+  words:[
+   {zh:'固然', py:['gù','rán'], th:'แม้จะจริงว่า', em:'🪵', tip:'ยอมรับว่าจริง แล้วพลิกด้วย 但'},
+   {zh:'何况', py:['hé','kuàng'], th:'ยิ่งไปกว่านั้น / นับประสาอะไร', em:'🔢', tip:'เสริมเหตุผลที่หนักกว่า มักมี 呢'},
+   {zh:'难免', py:['nán','miǎn'], th:'ย่อมหลีกเลี่ยงไม่ได้', em:'🕳️', tip:'难 (ยาก) + 免 (หลีกเลี่ยง)'},
+   {zh:'未必', py:['wèi','bì'], th:'ไม่จำเป็นต้อง', em:'❔', tip:'ลดความแน่นอน ไม่ได้ปฏิเสธเด็ดขาด'},
+   {zh:'毫无', py:['háo','wú'], th:'ไม่มีเลย', em:'🚫', tip:'毫无 + นามธรรม เช่น 毫无办法'},
+   {zh:'与否', py:['yǔ','fǒu'], th:'หรือไม่', em:'☯️', tip:'A + 与否 เช่น 成功与否 = สำเร็จหรือไม่'}
+  ],
+  grammar:{ title:'固然…，但…', th:'ยอมรับข้อดี แล้วชี้จุดที่สำคัญกว่า',
+   parts:[{r:'subj',zh:'价格',th:'หัวข้อ'},{r:'part',zh:'固然',th:'แม้จะจริงว่า'},{r:'verb',zh:'重要',th:'ยอมรับ'},{r:'part',zh:'但',th:'แต่'},{r:'verb',zh:'质量更重要',th:'จุดสำคัญกว่า'}],
+   examples:[
+    {lvl:'ง่าย', s:[['价格','subj'],['固然','part'],['重要','verb'],['，',''],['但','part'],['质量','subj'],['更','part'],['重要','verb'],['。','']], py:'jiàgé gùrán zhòngyào, dàn zhìliàng gèng zhòngyào', th:'ราคาก็สำคัญจริง แต่คุณภาพสำคัญกว่า'},
+    {lvl:'ปานกลาง', s:[['大人','subj'],['都','part'],['做','verb'],['不','part'],['到','verb'],['，',''],['何况','part'],['孩子','subj'],['呢','part'],['？','']], py:'dàrén dōu zuò bú dào, hékuàng háizi ne?', th:'ผู้ใหญ่ยังทำไม่ได้ แล้วเด็กจะทำได้อย่างไร'},
+    {lvl:'ปานกลาง', s:[['刚','part'],['开始','verb'],['学','verb'],['，',''],['难免','part'],['会','part'],['犯','verb'],['错','obj'],['。','']], py:'gāng kāishǐ xué, nánmiǎn huì fàn cuò', th:'เพิ่งเริ่มเรียน ย่อมพลาดได้เป็นธรรมดา'},
+    {lvl:'ใช้จริง', s:[['贵','verb'],['的','part'],['东西','subj'],['未必','part'],['就','part'],['好','verb'],['。','']], py:'guì de dōngxi wèibì jiù hǎo', th:'ของแพงไม่จำเป็นต้องดีเสมอไป'}
+   ],
+   use:'固然 ยอมรับว่าเป็นความจริงก่อน แล้วชี้ประเด็นที่สำคัญกว่าด้วย 但 หรือ 可是 ส่วน 难免 ใช้กับสิ่งที่เกิดได้เป็นปกติ และ 未必 ใช้ลดความแน่นอนอย่างสุภาพ',
+   trap:'ห้ามใช้ 固然 คู่กับ 所以 และห้ามใช้ 毫无 กับสิ่งที่เป็นรูปธรรม เช่น 毫无水 ต้องใช้กับนามธรรม เช่น 毫无办法 หรือ 毫无意义'},
+  dialog:[
+   {who:'คุณ', me:true, zh:'这个产品价格不便宜。', py:'zhège chǎnpǐn jiàgé bù piányi', th:'สินค้านี้ราคาไม่ถูก'},
+   {who:'เพื่อน', me:false, zh:'价格固然重要，但质量更重要。', py:'jiàgé gùrán zhòngyào, dàn zhìliàng gèng zhòngyào', th:'ราคาก็สำคัญ แต่คุณภาพสำคัญกว่า'},
+   {who:'คุณ', me:true, zh:'贵的未必就好。', py:'guì de wèibì jiù hǎo', th:'ของแพงไม่จำเป็นต้องดี'},
+   {who:'เพื่อน', me:false, zh:'对，但便宜的难免有问题。', py:'duì, dàn piányi de nánmiǎn yǒu wèntí', th:'ใช่ แต่ของถูกย่อมมีปัญหาบ้าง'},
+   {who:'คุณ', me:true, zh:'我现在毫无头绪，买与否再想想。', py:'wǒ xiànzài háowú tóuxù, mǎi yǔfǒu zài xiǎngxiang', th:'ตอนนี้ฉันไม่มีแนวทางเลย จะซื้อหรือไม่ขอคิดอีกที (头绪 = เงื่อนงำ/แนวทาง)'}
+  ]}
+];
+const LEVELS = [
+  {n:1, em:'🌱', name:'ระดับ 1 · เริ่มต้น', sub:'ระดับ HSK 1: ทักทาย ตัวเลข สั่งเครื่องดื่ม'},
+  {n:2, em:'🌿', name:'ระดับ 2 · ใช้เที่ยวได้', sub:'ระดับ HSK 2: ร้านอาหาร ถามทาง โรงแรม ซื้อของ'},
+  {n:3, em:'🌳', name:'ระดับ 3 · ต่อยอด HSK 3', sub:'ประสบการณ์ เปรียบเทียบ ประโยค 把 และขอความช่วยเหลือ'},
+  {n:4, em:'🌲', name:'ระดับ 4 · เหตุผลและความเห็น', sub:'ประมาณ HSK 4: 因为…所以 虽然…但是 如果…就'},
+  {n:5, em:'🏔️', name:'ระดับ 5 · ประโยคซับซ้อน', sub:'ประมาณ HSK 4–5: 被 ทิศทาง 来/去 越来越'},
+  {n:6, em:'🌄', name:'ระดับ 6 · ธุรกิจและการทำงาน', sub:'ประมาณ HSK 5: 为了 不但…而且 除了…以外'},
+  {n:7, em:'🗻', name:'ระดับ 7 · ภาษาเขียนและสำนวน', sub:'ประมาณ HSK 6: ภาษาเขียน สำนวน ประโยคเชื่อมซับซ้อน'},
+  {n:8, em:'🌌', name:'ระดับ 8 · การโต้แย้งและความคิดเชิงนามธรรม', sub:'ประมาณ HSK 7–8: แสดงความเห็น วิเคราะห์ ถกเถียง'},
+  {n:9, em:'🏆', name:'ระดับ 9 · ภาษาทางการและวรรณกรรม', sub:'ประมาณ HSK 9: ภาษาทางการ ภาษาโบราณที่ยังใช้ ข่าวและบทความ'}
+];
+const LESSONS = [...LESSONS_L1, ...LESSONS_L2.map(l => ({...l, lv:2})), ...LESSONS_L3, ...LESSONS_L4, ...LESSONS_L5, ...LESSONS_L6, ...LESSONS_L7, ...LESSONS_L8, ...LESSONS_L9];
+const levelReady = n => LESSONS.some(l => l.lv === n);
+const MAXAVAIL = () => Math.max(...LESSONS.map(l => l.lv));
+const ABS = new Set(['即使','无论','困难','坚持','放弃','成功','然而','因此','否则','尤其','其实','例如','一举两得','入乡随俗','半途而废','熟能生巧','事半功倍','十全十美','观点','看法','角度','认为','支持','反对','之所以','既然','影响','导致','结果','现象','与其','不如','宁可','选择','价值','意义','据','报道','表示','宣布','发展','政策','从而','以便','进行','实现','推动','并','固然','何况','难免','未必','毫无','与否','因为','所以','原因','虽然','但是','如果','打算','决定','机会','担心','被','越来越','流利','熟悉','习惯','进步','容易','为了','联系','报价','不但','而且','质量','服务','价格','满意','除了','以外','同意','建议','讨论','安排','要','吃','喝','几点','贵','便宜','以前','拍','快','慢','近','远','忘','找','丢','帮']);
+const ALL = LESSONS.flatMap((l,li) => l.words.map(w => ({...w, li, abs: ABS.has(w.zh)})));
+const EXAMPLES = LESSONS.flatMap((l,li) => l.grammar.examples.map(e => ({...e, li})));
+const BANKS = {
+ 1:[
+  {q:'"你好" แปลว่าอะไร', o:['สวัสดี','ขอบคุณ','ลาก่อน','ขอโทษ'], a:0, w:'你好 (nǐ hǎo) คือคำทักทายพื้นฐาน'},
+  {q:'ต้องการขอโทษ ใช้คำใด', o:['对不起','谢谢','再见','你好'], a:0, w:'对不起 (duìbuqǐ) = ขอโทษ'},
+  {q:'"三" คือเลขอะไร', o:['3','2','5','10'], a:0, w:'一 = 1, 二 = 2, 三 = 3, 五 = 5, 十 = 10'},
+  {q:'ข้อใดแปลว่า "ฉันชื่อเสี่ยวหมิง"', o:['我叫小明。','小明叫我。','叫小明我。','我小明叫。'], a:0, w:'โครงสร้างคือ 我 + 叫 + ชื่อ'},
+  {q:'"คุณชื่ออะไร" พูดว่า', o:['你叫什么名字？','什么你叫名字？','你名字什么叫？','叫你什么名字？'], a:0, w:'คำถาม 什么 อยู่ตำแหน่งเดียวกับคำตอบ ไม่ย้ายไปหน้าประโยค'},
+  {q:'ขอกาแฟหนึ่งแก้ว พูดว่า', o:['我要一杯咖啡。','我要咖啡一杯。','我一杯要咖啡。','一杯我要咖啡。'], a:0, w:'ลำดับคือ 要 + ตัวเลข + ลักษณนาม + นาม'},
+  {q:'"我喝茶。" แปลว่า', o:['ฉันดื่มชา','ฉันกินข้าว','ฉันอยากได้กาแฟ','ฉันไม่ชอบชา'], a:0, w:'喝 = ดื่ม, 茶 = ชา'},
+  {q:'"两个人" แปลว่า', o:['สองคน','สามคน','สองอัน','สิบคน'], a:0, w:'两 = สอง ใช้นำหน้าลักษณนาม และ 个 ใช้กับคน'}
+ ],
+ 2:[
+  {q:'ฉันอยากกินข้าว', o:['我想吃米饭。','我吃想米饭。','想我吃米饭。','我想米饭吃。'], a:0, w:'โครงสร้างคือ 我 + 想 + กริยา + กรรม'},
+  {q:'ห้องน้ำอยู่ที่ไหน', o:['厕所在哪儿？','厕所是哪儿？','在厕所哪儿？','哪儿在厕所？'], a:0, w:'สถานที่ + 在 + 哪儿 โดย 在 แปลว่า "อยู่ที่"'},
+  {q:'ฉันไม่มีกุญแจ', o:['我没有钥匙。','我不有钥匙。','我有没钥匙。','我没钥匙有。'], a:0, w:'ปฏิเสธ 有 ต้องใช้ 没有 เท่านั้น'},
+  {q:'แพงเกินไป', o:['太贵了！','很太贵！','太贵很！','贵太了！'], a:0, w:'โครงสร้างคือ 太 + คำคุณศัพท์ + 了'},
+  {q:'ขอเมนูหน่อย', o:['请给我菜单。','菜单给请我。','给请我菜单。','我请给菜单。'], a:0, w:'โครงสร้างคือ 请 + 给 + 我 + ของที่ขอ'},
+  {q:'เมื่อวานฉันไปร้านค้า', o:['我昨天去商店了。','我去昨天商店了。','昨天了我去商店。','我了昨天去商店。'], a:0, w:'ลำดับคือ ประธาน + เวลา + กริยา + สถานที่ + 了'},
+  {q:'"不要" ในประโยค 我不要辣的 อ่านว่า', o:['bú yào','bù yào','bǔ yào','bū yào'], a:0, w:'不 หน้าเสียง 4 อ่านเป็นเสียง 2 จึงเป็น bú'},
+  {q:'"在右边" แปลว่า', o:['อยู่ทางขวา','อยู่ทางซ้าย','อยู่ข้างหน้า','ไม่อยู่ที่นี่'], a:0, w:'右边 = ด้านขวา และ 在 = อยู่ที่'}
+ ],
+ 3:[
+  {q:'ฉันเคยไปปักกิ่ง', o:['我去过北京。','我去了过北京。','我过去北京。','我北京去过。'], a:0, w:'กริยา + 过 = เคยทำ โดย 过 อยู่หลังกริยา'},
+  {q:'ฉันไม่เคยไปเซี่ยงไฮ้', o:['我没去过上海。','我不去过上海。','我没有去了上海。','我去没过上海。'], a:0, w:'ปฏิเสธประสบการณ์ใช้ 没 + กริยา + 过'},
+  {q:'เครื่องบินเร็วกว่ารถไฟ', o:['飞机比火车快。','飞机比火车很快。','飞机很比火车快。','飞机快比火车。'], a:0, w:'A + 比 + B + คำคุณศัพท์ และห้ามใส่ 很'},
+  {q:'ข้อใดผิดไวยากรณ์', o:['地铁比出租车便宜。','地铁比出租车很便宜。','机场比火车站远一点儿。','火车没有飞机快。'], a:1, w:'หลัง 比 ห้ามใส่ 很 หน้าคำคุณศัพท์'},
+  {q:'ฉันลืมหนังสือเดินทางไว้ที่โรงแรม', o:['我把护照忘在酒店了。','我护照把忘在酒店了。','把我护照忘在酒店了。','我忘把护照在酒店了。'], a:0, w:'ลำดับคือ ประธาน + 把 + สิ่งของ + กริยา + ผลลัพธ์'},
+  {q:'ฉันหากุญแจเจอแล้ว', o:['我找到钥匙了。','我找钥匙到了。','我到找钥匙了。','我找了到钥匙。'], a:0, w:'找到 (หาเจอ) ติดกันเป็นกริยาตัวเดียว แล้วตามด้วยกรรมและ 了'},
+  {q:'ประโยค 你吃过北京烤鸭吗？ ถามอะไร', o:['ถามว่าเคยกินไหม','ถามว่ากำลังกินอยู่ไหม','ถามว่าจะกินไหม','ถามว่าชอบไหม'], a:0, w:'过 บอกประสบการณ์ในอดีต แปลว่า "เคย"'},
+  {q:'"以前" แปลว่า', o:['ก่อนหน้านี้','หลังจากนี้','ตอนนี้','พรุ่งนี้'], a:0, w:'以前 (yǐqián) = ก่อนหน้านี้ หรือในอดีต'}
+ ]
+};
+BANKS[4] = [
+  {q:'เพราะรถติด ฉันเลยมาสาย', o:['因为堵车，所以我迟到了。','因为堵车，但是我迟到了。','所以堵车，因为我迟到了。','虽然堵车，所以我迟到了。'], a:0, w:'因为 นำเหตุผล 所以 นำผลลัพธ์'},
+  {q:'"虽然" ควรคู่กับคำใด', o:['但是','所以','因为','如果'], a:0, w:'虽然…但是… = แม้ว่า…แต่…'},
+  {q:'ข้อใดผิดไวยากรณ์', o:['虽然很贵，所以很好吃。','虽然很贵，但是很好吃。','因为很贵，所以我不买。','如果很贵，我就不买。'], a:0, w:'虽然 คู่กับ 但是 ไม่ใช่ 所以'},
+  {q:'ถ้าฝนตก เราก็ไม่ไป', o:['如果下雨，我们就不去。','如果下雨，我们但是不去。','下雨如果，我们就不去。','如果下雨，就我们不去。'], a:0, w:'就 อยู่หลังประธานของประโยคผล'},
+  {q:'"预订" แปลว่า', o:['จองล่วงหน้า','ยกเลิก','ตัดสินใจ','โอกาส'], a:0, w:'预订 (yùdìng) = จองล่วงหน้า และ 取消 = ยกเลิก'},
+  {q:'"我打算再来" แปลว่า', o:['ฉันตั้งใจจะมาอีก','ฉันเคยมาแล้ว','ฉันไม่อยากมา','ฉันมาไม่ได้'], a:0, w:'打算 = ตั้งใจ วางแผน'},
+  {q:'แม้ห้องจะเล็ก แต่เงียบสงบ', o:['虽然房间很小，但是很安静。','虽然房间很小，所以很安静。','因为房间很小，但是很安静。','房间虽然小，因为很安静。'], a:0, w:'虽然…但是… ประโยคหลังชี้ข้อดี'},
+  {q:'เหนื่อยมากจึงอยากนอน', o:['因为太累了，所以我想睡觉。','虽然太累了，所以我想睡觉。','如果太累了，但是我想睡觉。','因为太累了，但是我想睡觉。'], a:0, w:'因为…所以… เชื่อมเหตุผลกับผลลัพธ์'}
+];
+BANKS[5] = [
+  {q:'โทรศัพท์ของฉันถูกขโมย', o:['我的手机被偷了。','我的手机把偷了。','我被手机偷了。','手机我被偷了。'], a:0, w:'สิ่งของ + 被 + กริยา + 了'},
+  {q:'"请进来" คำว่า 来 บอกอะไร', o:['เคลื่อนเข้าหาผู้พูด','เคลื่อนออกจากผู้พูด','ย้อนกลับ','หยุดอยู่กับที่'], a:0, w:'来 = เข้าหาผู้พูด 去 = ออกห่างผู้พูด'},
+  {q:'เขาเดินออกไปแล้ว', o:['他走出去了。','他走去出了。','他出走去了。','他去走出了。'], a:0, w:'กริยา + ทิศ + 来/去'},
+  {q:'ข้อใดผิดไวยากรณ์', o:['我的中文越来越很好。','我的中文越来越好。','天气越来越冷了。','这里的人越来越多。'], a:0, w:'越来越 ห้ามใช้คู่กับ 很'},
+  {q:'"越来越热" แปลว่า', o:['ร้อนขึ้นเรื่อย ๆ','ร้อนมาก','ไม่ร้อน','ร้อนกว่าเมื่อวาน'], a:0, w:'越来越 = …ขึ้นเรื่อย ๆ เทียบกับตัวเองในอดีต'},
+  {q:'ข้อใดถูกต้อง', o:['杯子被我打碎了。','杯子被打了我碎。','杯子把我打碎了。','我被杯子打碎了。'], a:0, w:'สิ่งของ + 被 + ผู้กระทำ + กริยา + ผลลัพธ์'},
+  {q:'ฉันชินกับอากาศที่นี่แล้ว', o:['我习惯这儿的天气了。','我这儿天气习惯了。','习惯我这儿天气了。','我习惯这儿天气的了。'], a:0, w:'ประธาน + กริยา + กรรม + 了'},
+  {q:'ห้องถูกทำความสะอาดเรียบร้อยแล้ว', o:['房间已经被打扫干净了。','房间已经把打扫干净了。','被房间已经打扫干净了。','已经房间被打扫干净了。'], a:0, w:'สิ่งของ + 已经 + 被 + กริยา + ผล + 了'}
+];
+BANKS[6] = [
+  {q:'เพื่อเรียนภาษาจีน ฉันมาปักกิ่ง', o:['为了学中文，我来北京。','为了学中文，所以我来北京。','因为了学中文，我来北京。','学中文为了，我来北京。'], a:0, w:'为了 นำจุดประสงค์ และไม่ใช้คู่กับ 所以'},
+  {q:'ร้านนี้ไม่เพียงถูก แต่ยังสะอาด', o:['这家店不但便宜，而且很干净。','这家店不但便宜，但是很干净。','这家店虽然便宜，而且很干净。','这家店不但便宜，所以很干净。'], a:0, w:'不但…而且… เรียงข้อดีที่เพิ่มขึ้น'},
+  {q:'"除了周日以外，我每天都工作" แปลว่า', o:['นอกจากวันอาทิตย์ ฉันทำงานทุกวัน','นอกจากวันอาทิตย์ ฉันยังทำงานอีก','ฉันทำงานเฉพาะวันอาทิตย์','ฉันไม่ทำงานทุกวัน'], a:0, w:'除了…都 = ยกเว้นสิ่งนั้น'},
+  {q:'"除了米饭以外，我还想吃面条" คำว่า 还 บอกอะไร', o:['ยังอยากกินเพิ่ม','ไม่อยากกิน','ยกเว้นกินเท่านั้น','กินเสร็จแล้ว'], a:0, w:'除了…还 = นอกจาก…แล้วยัง…'},
+  {q:'"合同" แปลว่า', o:['สัญญา','ผู้จัดการ','การประชุม','ราคา'], a:0, w:'合同 (hétong) = สัญญา'},
+  {q:'"为了" ใช้บอกอะไร', o:['จุดประสงค์','เหตุผลย้อนหลัง','ประสบการณ์','การเปรียบเทียบ'], a:0, w:'为了 = เพื่อ (จุดประสงค์ของการกระทำ)'},
+  {q:'นอกจากราคา ฉันอยากคุยเรื่องบริการด้วย', o:['除了价格以外，我还想讨论服务。','除了价格以外，我都想讨论服务。','除了价格，所以我想讨论服务。','除了服务，我还想讨论价格。'], a:0, w:'除了…以外，还… = นอกจาก…แล้วยัง…'},
+  {q:'"同意" แปลว่า', o:['เห็นด้วย','จัดการ','เสนอแนะ','ติดต่อ'], a:0, w:'同意 (tóngyì) = เห็นด้วย'}
+];
+BANKS[7] = [
+  {q:'"即使很累，我也要去" แปลว่า', o:['ต่อให้เหนื่อยมาก ฉันก็จะไป','เพราะเหนื่อย ฉันจึงไม่ไป','ถ้าเหนื่อย ฉันก็ไม่ไป','แม้ฉันไปแล้ว ก็ยังเหนื่อย'], a:0, w:'即使…也… = ต่อให้…ก็…'},
+  {q:'ข้อใดถูกต้อง', o:['无论谁来，我们都欢迎。','无论谁来，我们但是欢迎。','虽然谁来，我们都欢迎。','无论谁来，所以我们欢迎。'], a:0, w:'无论 ต้องคู่กับ 都 หรือ 也'},
+  {q:'"否则" แปลว่า', o:['มิฉะนั้น','อย่างไรก็ตาม','ด้วยเหตุนี้','ตัวอย่างเช่น'], a:0, w:'否则 (fǒuzé) = มิฉะนั้น'},
+  {q:'ข้อใดผิดไวยากรณ์', o:['即使下雨，但是他也去。','即使下雨，他也去。','即使很累，我也要去。','无论多难，我都不放弃。'], a:0, w:'即使 ไม่ใช้คู่กับ 但是'},
+  {q:'"半途而废" แปลว่า', o:['ทำครึ่งทางแล้วเลิก','ได้สองอย่างในครั้งเดียว','สมบูรณ์แบบ','ฝึกบ่อยก็เก่ง'], a:0, w:'半途而废 = เลิกกลางคัน'},
+  {q:'"熟能生巧" มีความหมายว่า', o:['ฝึกบ่อยก็ชำนาญ','ลงแรงน้อยได้ผลมาก','ทำตามธรรมเนียม','ทำครึ่งทางแล้วเลิก'], a:0, w:'熟能生巧 = ชำนาญแล้วเกิดความเก่ง'},
+  {q:'"因此" ใช้บอกอะไร', o:['ผลลัพธ์ในภาษาเขียน','เหตุผลในภาษาพูด','การเปรียบเทียบ','การยกตัวอย่าง'], a:0, w:'因此 นำผลลัพธ์ ต่างจาก 因为 ที่นำเหตุผล'},
+  {q:'เติมสำนวน: 到了中国，要____。', o:['入乡随俗','半途而废','十全十美','事半功倍'], a:0, w:'入乡随俗 = ปรับตัวตามธรรมเนียมที่ไปอยู่'}
+];
+BANKS[8] = [
+  {q:'"在我看来" แปลว่า', o:['ในความเห็นของฉัน','เพราะฉันเห็น','ถ้าฉันเห็น','ฉันไม่เห็น'], a:0, w:'在…看来 = ในความเห็นของ…'},
+  {q:'ที่เขามาสายก็เพราะรถติด', o:['他之所以迟到，是因为堵车。','他之所以迟到，所以堵车。','因为迟到，他之所以堵车。','他是因为迟到，之所以堵车。'], a:0, w:'之所以 นำผล และ 是因为 นำเหตุ'},
+  {q:'ใน 与其…不如… ตัวที่เลือกคือ', o:['ส่วนหลัง 不如','ส่วนหน้า 与其','ทั้งสองส่วน','ไม่เลือกเลย'], a:0, w:'与其 คือตัวที่ไม่เลือก และ 不如 คือตัวที่เลือก'},
+  {q:'ข้อใดผิดไวยากรณ์', o:['他之所以迟到，所以堵车。','他之所以迟到，是因为堵车。','既然你同意，我们就开始。','对学生来说，时间重要。'], a:0, w:'ห้ามใช้ 之所以 คู่กับ 所以'},
+  {q:'"宁可" แปลว่า', o:['ยอม…ดีกว่า','แทนที่จะ','ในเมื่อ','ไม่ว่า'], a:0, w:'宁可 (nìngkě) = ยอมแล้ว…ดีกว่า'},
+  {q:'"既然你同意了，我们就开始吧" แปลว่า', o:['ในเมื่อคุณเห็นด้วยแล้ว เราก็เริ่มกันเถอะ','ถ้าคุณเห็นด้วย เราก็จะเริ่ม','แม้คุณเห็นด้วย เราก็ไม่เริ่ม','เพราะคุณไม่เห็นด้วย เราจึงไม่เริ่ม'], a:0, w:'既然 นำเหตุที่เป็นจริงแล้ว'},
+  {q:'"导致" ส่วนใหญ่นำผลแบบใด', o:['ผลที่มักไม่ดี','ผลที่ดีเสมอ','จุดประสงค์','เงื่อนไข'], a:0, w:'导致 = ทำให้เกิด มักใช้กับผลลบ'},
+  {q:'"对学生来说，时间最重要" แปลว่า', o:['สำหรับนักเรียน เวลาสำคัญที่สุด','นักเรียนไม่มีเวลา','นักเรียนสอนเรื่องเวลา','เวลาสำคัญกว่านักเรียน'], a:0, w:'对…来说 = สำหรับ…'}
+];
+const TONES = [
+ {n:1, name:'เสียง 1', d:'สูงเรียบ', path:'M12,16 L108,16', ex:[['mā','妈','แม่']]},
+ {n:2, name:'เสียง 2', d:'ขึ้น', path:'M12,52 L108,16', ex:[['má','麻','ผ้าลินิน']]},
+ {n:3, name:'เสียง 3', d:'ลงแล้วขึ้น', path:'M12,40 C34,82 56,82 108,22', ex:[['mǎ','马','ม้า']]},
+ {n:4, name:'เสียง 4', d:'ลงเร็ว', path:'M12,10 L108,80', ex:[['mà','骂','ด่า']]},
+ {n:0, name:'เสียงเบา', d:'สั้นเบา', path:'M44,60 L76,60', ex:[['ma','吗','คำลงท้ายคำถาม']]}
+];
+
+/* ---------- state ---------- */
+let tab = 'lessons', openLevel = null, openLesson = null, test = null;
+let known = new Set(store.get('cvt_known', []));
+let doneLessons = new Set(store.get('cvt_done', []));
+let profile = Object.assign({max:1, rec:null, tested:false}, store.get('cvt_profile', {}));
+const saveProfile = () => store.set('cvt_profile', profile);
+const lessonUnlocked = li => LESSONS[li].lv <= profile.max;
+const TABS = [['lessons','ห้องเรียน'],['cards','แฟลชการ์ด'],['quiz','ฝึกหัด'],['tones','โทนเสียง']];
+
+function updateProg(){
+  $('#prog').textContent = `ปลดล็อกถึงระดับ ${profile.max} · จำได้ ${known.size}/${ALL.length} คำ · เรียนจบ ${doneLessons.size}/${LESSONS.length} บท`;
+}
+function renderTabs(){
+  $('#tabs').innerHTML = TABS.map(([k,l]) => `<button class="tab" role="tab" aria-selected="${tab===k}" data-tab="${k}">${l}</button>`).join('');
+  $('#tabs').querySelectorAll('.tab').forEach(b => b.onclick = () => go(b.dataset.tab));
+}
+function go(t){ tab = t; test = null; openLevel = null; openLesson = null; renderTabs(); render(); window.scrollTo(0,0); }
+function render(){
+  updateProg();
+  if (test) viewTest(); else ({lessons:viewLessons, cards:viewCards, quiz:viewQuiz, tones:viewTones})[tab]();
+  $('#view').querySelectorAll('[data-say]').forEach(b => b.onclick = e => { e.stopPropagation(); say(b.dataset.say); });
+}
+
+/* ---------- lessons ---------- */
+function viewLessons(){
+  const v = $('#view');
+  if (openLevel === null) return viewLevels(v);
+  if (openLesson === null) return viewRoom(v);
+  return viewLesson(v);
+}
+function viewLevels(v){
+  v.innerHTML = `
+    <div class="card">
+      <h2>เริ่มจากห้องไหนดี?</h2>
+      <p class="muted" style="margin-top:0">เลือกห้องที่ตรงกับระดับของคุณได้เลย ห้องที่ยังล็อกอยู่ต้องผ่านแบบทดสอบ 8 ข้อก่อนเข้า หรือทำแบบทดสอบวัดระดับให้แอปแนะนำห้องที่เหมาะให้</p>
+      <div class="row"><button class="btn primary" id="placeBtn">ทดสอบวัดระดับ</button><span class="small muted">${profile.tested ? 'เคยทำแล้ว ทำซ้ำได้ทุกเมื่อ' : 'ข้อสอบเรียงจากระดับ 1 ขึ้นไป หยุดเมื่อเริ่มยาก ใช้เวลาราว 5–10 นาที'}</span></div>
+    </div>
+    <h3>ห้องเรียน</h3>
+    <div class="grid lessons">${LEVELS.map(L => {
+      const ready = levelReady(L.n);
+      const open = ready && L.n <= profile.max, ls = LESSONS.filter(l => l.lv===L.n), dn = ls.filter(l => doneLessons.has(l.id)).length;
+      return `<button class="card lcard ${open?'':'locked'}" data-room="${L.n}" ${ready?'':'data-soon="1"'}>
+        <span class="big">${ready ? (open ? L.em : '🔒') : '🔜'}</span>
+        <strong>${L.name}</strong>
+        <span class="small muted">${L.sub}</span>
+        <span class="small">${!ready ? 'เร็ว ๆ นี้ · กำลังเตรียมเนื้อหา' : open ? `เปิดแล้ว · เรียนจบ ${dn}/${ls.length} บท` : 'ล็อกอยู่ · ทดสอบ 8 ข้อ ต้องได้ 6 ข้อขึ้นไป'}</span>
+        <span class="small" style="font-weight:600">${!ready ? '' : open ? 'เข้าห้อง →' : 'ทดสอบเพื่อเข้าห้อง →'}</span>
+      </button>`; }).join('')}
+    </div>
+    <p class="small muted">ชื่อระดับ HSK ของห้อง 4–9 เป็นการประมาณตามความยากของเนื้อหา ยังไม่ได้เทียบกับรายชื่อศัพท์ HSK 3.0 ทางการ</p>
+    <h3>รหัสสีที่ใช้ทั้งแอป</h3>
+    <div class="card">
+      ${legendHTML()}
+      <p class="small muted" style="margin:10px 0 0">พินอินและอักษรของคำศัพท์ใช้สีตามโทนเสียง: <span class="t t1">เสียง 1</span> <span class="t t2">เสียง 2</span> <span class="t t3">เสียง 3</span> <span class="t t4">เสียง 4</span> <span class="t t0">เสียงเบา</span></p>
+    </div>`;
+  $('#placeBtn').onclick = () => startTest('placement');
+  v.querySelectorAll('[data-room]').forEach(b => b.onclick = () => {
+    const n = +b.dataset.room;
+    if (!levelReady(n)) return;
+    if (n <= profile.max){ openLevel = n; render(); window.scrollTo(0,0); } else startTest('entry', n);
+  });
+}
+function viewRoom(v){
+  const L = LEVELS[openLevel-1];
+  v.innerHTML = `
+    <button class="btn back" id="back">← กลับไปเลือกห้อง</button>
+    <h2>${L.em} ${L.name}</h2>
+    <p class="muted" style="margin-top:-4px">${L.sub}</p>
+    <div class="grid lessons">${LESSONS.map((l,i)=>({l,i})).filter(x => x.l.lv===openLevel).map(({l,i}) => `
+      <button class="card lcard" data-open="${i}">
+        <span class="big">${l.em}</span>
+        <span class="zhT">${l.zh}</span>
+        <span class="small muted">${l.py}</span>
+        <strong>${l.th}</strong>
+        <span class="small muted">${doneLessons.has(l.id) ? '✓ เรียนจบแล้ว' : 'ยังไม่ได้เรียน'}</span>
+      </button>`).join('')}
+    </div>
+    ${openLevel < MAXAVAIL() && profile.max <= openLevel ? `<div class="note">เรียนครบแล้ว ลองทำแบบทดสอบเข้าห้องระดับ ${openLevel+1} เพื่อไปต่อ <button class="btn" id="nextTest" style="margin-left:8px">ทดสอบเข้าห้องระดับ ${openLevel+1}</button></div>` : ''}`;
+  $('#back').onclick = () => { openLevel = null; render(); window.scrollTo(0,0); };
+  const nt = $('#nextTest'); if (nt) nt.onclick = () => startTest('entry', openLevel+1);
+  v.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { openLesson = +b.dataset.open; render(); window.scrollTo(0,0); });
+}
+function viewLesson(v){
+  const l = LESSONS[openLesson], g = l.grammar;
+  v.innerHTML = `
+    <button class="btn back" id="back">← กลับไปห้องระดับ ${l.lv}</button>
+    <h2><span class="zh">${l.zh}</span> · ${l.th}</h2>
+    <h3 style="margin-top:6px">1. ภาพคำศัพท์</h3>
+    <div class="scene">
+      <div class="scene-cap">${l.scene}</div>
+      <div class="tiles">${l.words.map(w=>`
+        <div class="tile">
+          <div class="em" aria-hidden="true">${w.em}</div>
+          <div class="hz">${hzHTML(w.zh,w.py)}</div>
+          <div class="py">${pyHTML(w.py)}</div>
+          <div class="th">${w.th}</div>
+          <div class="row" style="justify-content:center"><button class="spk" data-say="${w.zh}" aria-label="ฟังเสียง ${w.zh}">🔊</button></div>
+          <div class="tip">${w.tip}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <h3>2. ไวยากรณ์: <span class="zh">${g.title}</span></h3>
+    <div class="card">
+      <p style="margin:0 0 10px">${g.th}</p>
+      <div class="gdiag">${g.parts.map((p,i)=>`${i?'<span class="arrow" aria-hidden="true">→</span>':''}<div class="gbox b-${p.r}"><div class="zh">${p.zh}</div><div class="l">${p.th}</div></div>`).join('')}</div>
+      <div style="margin-top:10px">${legendHTML()}</div>
+      <h3>ตัวอย่าง</h3>
+      ${g.examples.map(e=>`
+        <div class="ex">
+          <div><span class="zh">${segHTML(e.s)}</span><span class="lvl">${e.lvl}</span> <button class="spk" data-say="${e.s.map(x=>x[0]).join('')}" aria-label="ฟังประโยค">🔊</button></div>
+          <div class="small muted">${e.py}</div>
+          <div>${e.th}</div>
+        </div>`).join('')}
+      <div class="note"><strong>ใช้เมื่อไหร่:</strong> ${g.use}</div>
+      <div class="trap"><strong>จุดที่คนไทยมักพลาด:</strong> ${g.trap}</div>
+    </div>
+    <h3>3. บทสนทนา</h3>
+    <div class="sw">
+      <label><input type="checkbox" id="swpy" checked> พินอิน</label>
+      <label><input type="checkbox" id="swth" checked> คำแปล</label>
+    </div>
+    <div class="dlg" id="dlg">${l.dialog.map(d=>`
+      <div class="bub ${d.me?'me':''}">
+        <div class="who">${d.who}</div>
+        <div class="zh">${d.zh} <button class="spk" data-say="${d.zh}" aria-label="ฟังประโยค">🔊</button></div>
+        <div class="small muted pyl">${d.py}</div>
+        <div class="small thl">${d.th}</div>
+      </div>`).join('')}
+    </div>
+    <div class="row" style="margin-top:20px">
+      <button class="btn primary" id="doneBtn">${doneLessons.has(l.id)?'✓ เรียนจบแล้ว':'ทำเครื่องหมายว่าเรียนจบ'}</button>
+      <button class="btn" id="goQuiz">ฝึกหัดบทนี้</button>
+    </div>`;
+  $('#back').onclick = () => { openLesson = null; render(); window.scrollTo(0,0); };
+  $('#swpy').onchange = e => $('#dlg').classList.toggle('hide-py', !e.target.checked);
+  $('#swth').onchange = e => $('#dlg').classList.toggle('hide-th', !e.target.checked);
+  $('#doneBtn').onclick = () => { doneLessons.add(l.id); store.set('cvt_done',[...doneLessons]); render(); };
+  $('#goQuiz').onclick = () => { quizFilter = openLesson; quiz = null; go('quiz'); };
+}
+
+/* ---------- placement and entry tests ---------- */
+const cjk = s => esc(s).replace(/[一-鿿][一-鿿，。？！、]*/g, m => `<span class="zh" style="font-size:1.12em">${m}</span>`);
+function startTest(kind, level){
+  let qs;
+  if (kind === 'placement'){
+    qs = [];
+    for (let n = 1; n < MAXAVAIL(); n++) if (BANKS[n]) qs.push(...shuffle(BANKS[n]).slice(0,3).map(q => ({...q, lv:n})));
+  } else qs = shuffle(BANKS[level-1]).map(q => ({...q, lv:level-1}));
+  qs = qs.map(q => { const idx = shuffle(q.o.map((_,i)=>i)); return {...q, o: idx.map(i=>q.o[i]), a: idx.indexOf(q.a)}; });
+  const z = () => Object.fromEntries([1,2,3,4,5,6,7,8,9].map(n => [n,0]));
+  test = {kind, level: level||0, qs, i:0, score:0, by:z(), asked:z(), missed:[], answered:false};
+  tab = 'lessons'; renderTabs(); render(); window.scrollTo(0,0);
+}
+function viewTest(){
+  const v = $('#view'), t = test;
+  if (t.i >= t.qs.length) return viewTestResult(v);
+  const q = t.qs[t.i];
+  const title = t.kind==='placement' ? 'ทดสอบวัดระดับ' : `ทดสอบเข้าห้องระดับ ${t.level}`;
+  v.innerHTML = `
+    <div class="row" style="justify-content:space-between"><h2 style="margin:0">${title}</h2><button class="btn" id="tQuit">ออกจากแบบทดสอบ</button></div>
+    <div class="bar" style="margin-top:12px" aria-hidden="true"><i style="width:${t.i/t.qs.length*100}%"></i></div>
+    <p class="small muted">ข้อ ${t.i+1} จาก ${t.qs.length}${t.kind==='entry' ? ' · ต้องได้ 6 ข้อขึ้นไปจึงผ่าน' : ''}</p>
+    <div class="card">
+      <p style="margin:0"><strong>${cjk(q.q)}</strong></p>
+      <div class="opts">${q.o.map((o,i)=>`<button class="opt" data-o="${i}">${cjk(o)}</button>`).join('')}</div>
+      <div id="tFb"></div>
+    </div>`;
+  $('#tQuit').onclick = () => { test = null; render(); };
+  v.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    if (t.answered) return;
+    t.answered = true;
+    const pick = +b.dataset.o, ok = pick === q.a;
+    v.querySelectorAll('.opt').forEach((x,i) => { x.disabled = true; if (i===q.a) x.classList.add('ok'); });
+    if (!ok) b.classList.add('no');
+    if (ok){ t.score++; t.by[q.lv]++; } else t.missed.push(q);
+    t.asked[q.lv]++;
+    if (t.kind==='placement'){ const nx = t.qs[t.i+1]; if ((!nx || nx.lv !== q.lv) && t.by[q.lv] < 2) t.qs = t.qs.slice(0, t.i+1); }
+    const last = t.i === t.qs.length-1;
+    $('#tFb').innerHTML = `<div class="fb ${ok?'ok':'no'}"><strong>${ok?'ถูกต้อง':'ยังไม่ถูก'}</strong> ${cjk(q.w)}</div><div class="row" style="margin-top:12px"><button class="btn primary" id="tNext">${last?'ดูผล':'ข้อต่อไป'}</button></div>`;
+    $('#tNext').onclick = () => { t.i++; t.answered = false; render(); window.scrollTo(0,0); };
+  });
+}
+function viewTestResult(v){
+  const t = test;
+  const missed = t.missed.length ? `<h3>ข้อที่ควรทบทวน</h3>${t.missed.map(q=>`<div class="ex"><div>${cjk(q.q)}</div><div class="small muted">${cjk(q.w)}</div><div></div></div>`).join('')}` : '';
+  if (t.kind === 'placement'){
+    const s = t.by; let ready = 1;
+    for (let n = 1; n < MAXAVAIL(); n++){ if (t.asked[n] && s[n] >= 2) ready = n + 1; else break; }
+    profile.tested = true; profile.rec = ready; profile.max = Math.max(profile.max, ready); saveProfile(); updateProg();
+    const msg = ready===1 ? 'เริ่มจากห้องระดับ 1 เพื่อปูพื้นฐานให้แน่นก่อน' : `ผ่านพื้นฐานถึงระดับ ${ready-1} แล้ว เปิดห้องระดับ ${ready} ให้แล้ว ห้องก่อนหน้าทบทวนได้ทุกเมื่อ`;
+    const rows = [1,2,3,4,5,6,7,8,9].filter(n => t.asked[n]);
+    v.innerHTML = `
+      <div class="card" style="text-align:center">
+        <div style="font-size:2.6rem">${LEVELS[ready-1].em}</div>
+        <h2>ห้องที่เหมาะกับคุณ: ${LEVELS[ready-1].name}</h2>
+        <p class="muted">${msg}</p>
+        <div style="text-align:left;max-width:420px;margin:12px auto">${rows.map(n=>`<div class="small" style="margin-top:8px">${LEVELS[n-1].name}: ${s[n]}/${t.asked[n]}</div><div class="bar"><i style="width:${s[n]/t.asked[n]*100}%"></i></div>`).join('')}</div>
+        <div class="row" style="justify-content:center;margin-top:14px"><button class="btn primary" id="rGo">เข้าห้องระดับ ${ready}</button><button class="btn" id="rAgain">ทำแบบทดสอบอีกครั้ง</button></div>
+      </div>${missed}`;
+    $('#rGo').onclick = () => { test = null; openLevel = ready; openLesson = null; render(); window.scrollTo(0,0); };
+    $('#rAgain').onclick = () => startTest('placement');
+    return;
+  }
+  const pass = t.score >= 6;
+  if (pass){ profile.max = Math.max(profile.max, t.level); saveProfile(); updateProg(); }
+  v.innerHTML = `
+    <div class="card" style="text-align:center">
+      <div style="font-size:2.6rem">${pass?'🔓':'📚'}</div>
+      <h2>${pass ? `ผ่านแล้ว ปลดล็อกห้องระดับ ${t.level}` : `ได้ ${t.score} จาก 8 ข้อ ยังไม่ถึงเกณฑ์`}</h2>
+      <p class="muted">${pass ? `คุณได้ ${t.score} จาก 8 ข้อ เข้าห้องได้เลย` : `ต้องได้ 6 ข้อขึ้นไปจึงเข้าห้องระดับ ${t.level} ได้ ลองทบทวนห้องระดับ ${Math.min(profile.max, t.level-1)} ซึ่งเป็นระดับสูงสุดที่คุณปลดล็อกแล้ว แล้วกลับมาทดสอบใหม่`}</p>
+      <div class="bar"><i style="width:${t.score/8*100}%"></i></div>
+      <div class="row" style="justify-content:center;margin-top:14px">
+        ${pass ? `<button class="btn primary" id="rGo">เข้าห้องระดับ ${t.level}</button>` : `<button class="btn primary" id="rReview">ทบทวนห้องระดับ ${Math.min(profile.max, t.level-1)}</button><button class="btn" id="rAgain">ทำแบบทดสอบอีกครั้ง</button>`}
+      </div>
+    </div>${missed}`;
+  if (pass) $('#rGo').onclick = () => { const lv = t.level; test = null; openLevel = lv; openLesson = null; render(); window.scrollTo(0,0); };
+  else {
+    $('#rReview').onclick = () => { const lv = Math.min(profile.max, t.level-1); test = null; openLevel = lv; openLesson = null; render(); window.scrollTo(0,0); };
+    $('#rAgain').onclick = () => startTest('entry', t.level);
+  }
+}
+
+/* ---------- flashcards ---------- */
+let fc = {deck:[], pos:0, flip:false, filter:'all', mode:'pic'};
+function fcBuild(){
+  let pool = ALL.map((w,i)=>i).filter(i => lessonUnlocked(ALL[i].li) && (fc.filter==='all' || ALL[i].li === +fc.filter));
+  fc.deck = shuffle(pool); fc.pos = 0; fc.flip = false;
+}
+function viewCards(){
+  if (!fc.deck.length) fcBuild();
+  const v = $('#view');
+  const done = fc.pos >= fc.deck.length;
+  const w = done ? null : ALL[fc.deck[fc.pos]];
+  const kn = ALL.filter((x,i)=>known.has(x.zh)).length;
+  v.innerHTML = `
+    <h2>แฟลชการ์ด</h2>
+    <div class="row" style="margin-bottom:12px">
+      <label class="small muted" for="fcf">หมวด</label>
+      <select id="fcf"><option value="all">ทุกบทที่ปลดล็อก</option>${LESSONS.map((l,i)=>lessonUnlocked(i)?`<option value="${i}" ${fc.filter==String(i)?'selected':''}>ระดับ ${l.lv} · ${l.th}</option>`:'').join('')}</select>
+      <label class="small muted" for="fcm">ด้านหน้าการ์ด</label>
+      <select id="fcm"><option value="pic" ${fc.mode==='pic'?'selected':''}>ภาพ</option><option value="zh" ${fc.mode==='zh'?'selected':''}>ตัวอักษรจีน</option></select>
+    </div>
+    <div class="bar" aria-hidden="true"><i style="width:${Math.min(100,fc.deck.length?fc.pos/fc.deck.length*100:0)}%"></i></div>
+    <p class="small muted">การ์ดที่ ${Math.min(fc.pos+1,fc.deck.length)} จาก ${fc.deck.length} · จำได้ทั้งหมด ${kn}/${ALL.length}</p>
+    ${done ? `
+      <div class="card" style="text-align:center;padding:32px 16px">
+        <div style="font-size:3rem">🎉</div>
+        <h2>ครบสำรับแล้ว</h2>
+        <p class="muted">คำที่ยังไม่แน่นจะวนกลับมาให้ทบทวนในรอบถัดไป</p>
+        <button class="btn primary" id="fcAgain">สับไพ่เริ่มใหม่</button>
+      </div>` : `
+      <div class="card fc" id="fcCard" role="button" tabindex="0" aria-label="แตะเพื่อพลิกการ์ด">
+        ${!fc.flip ? (fc.mode==='pic' ? `<div class="em" aria-hidden="true">${w.em}</div><div class="muted small">แตะเพื่อดูคำตอบ</div>` : `<div class="hz">${hzHTML(w.zh,w.py)}</div><div class="muted small">แตะเพื่อดูคำตอบ</div>`)
+        : `${fc.mode==='pic' ? `<div class="em" aria-hidden="true">${w.em}</div>` : ''}
+           <div class="hz">${hzHTML(w.zh,w.py)}</div>
+           <div class="py">${pyHTML(w.py)}</div>
+           <div class="th">${w.th}</div>
+           <div class="small muted" style="max-width:420px">${w.tip}</div>
+           <div class="row" style="justify-content:center"><button class="spk" data-say="${w.zh}" aria-label="ฟังเสียง">🔊</button></div>`}
+      </div>
+      <div class="row" style="justify-content:center;margin-top:12px">
+        <button class="btn" id="fcNo" ${fc.flip?'':'disabled'}>ยังไม่แน่น</button>
+        <button class="btn primary" id="fcYes" ${fc.flip?'':'disabled'}>จำได้</button>
+      </div>`}`;
+  $('#fcf').onchange = e => { fc.filter = e.target.value; fcBuild(); render(); };
+  $('#fcm').onchange = e => { fc.mode = e.target.value; fc.flip = false; render(); };
+  if (done){ $('#fcAgain').onclick = () => { fcBuild(); render(); }; return; }
+  const flip = () => { fc.flip = !fc.flip; render(); };
+  $('#fcCard').onclick = flip;
+  $('#fcCard').onkeydown = e => { if (e.key==='Enter' || e.key===' '){ e.preventDefault(); flip(); } };
+  $('#fcYes').onclick = () => { known.add(w.zh); store.set('cvt_known',[...known]); fc.pos++; fc.flip=false; render(); };
+  $('#fcNo').onclick = () => { known.delete(w.zh); store.set('cvt_known',[...known]); const idx = fc.deck[fc.pos]; fc.deck.splice(fc.pos,1); fc.deck.splice(Math.min(fc.pos+3, fc.deck.length),0,idx); fc.flip=false; render(); };
+}
+
+/* ---------- quiz ---------- */
+let quizFilter = null, quiz = null;
+function buildQuiz(){
+  const pool = ALL.filter(w => lessonUnlocked(w.li) && (quizFilter===null || w.li===quizFilter));
+  const picks = shuffle(pool).slice(0, quizFilter===null ? 6 : 4);
+  const qs = picks.map((w,i) => ({type: (!w.abs && i%2===0) ? 'pic' : 'mean', w}));
+  const exPool = EXAMPLES.filter(e => lessonUnlocked(e.li) && (quizFilter===null || e.li===quizFilter));
+  shuffle(exPool).slice(0, 2).forEach(e => qs.push({type:'order', e}));
+  quiz = {qs: shuffle(qs), i:0, score:0, wrong:[], answered:false, placed:[], tiles:[]};
+}
+function distract(w, key){
+  const others = shuffle(ALL.filter(x => lessonUnlocked(x.li) && x.zh !== w.zh && (key==='th' ? x.th !== w.th : true))).slice(0,3);
+  return shuffle([w, ...others]);
+}
+function viewQuiz(){
+  const v = $('#view');
+  if (!quiz) buildQuiz();
+  const head = `<h2>ฝึกหัด${quizFilter!==null?`: ${LESSONS[quizFilter].th}`:''}</h2>
+    <div class="row" style="margin-bottom:10px"><label class="small muted" for="qf">ขอบเขต</label>
+    <select id="qf"><option value="all">ทุกบทที่ปลดล็อก</option>${LESSONS.map((l,i)=>lessonUnlocked(i)?`<option value="${i}" ${quizFilter===i?'selected':''}>ระดับ ${l.lv} · ${l.th}</option>`:'').join('')}</select></div>`;
+  const bind = () => { $('#qf').onchange = e => { quizFilter = e.target.value==='all' ? null : +e.target.value; quiz = null; render(); }; };
+  if (quiz.i >= quiz.qs.length){
+    const total = quiz.qs.length;
+    v.innerHTML = head + `
+      <div class="card" style="text-align:center">
+        <div style="font-size:2.6rem">${quiz.score===total?'🏆':'👍'}</div>
+        <h2>ได้ ${quiz.score} จาก ${total} ข้อ</h2>
+        <div class="bar"><i style="width:${quiz.score/total*100}%"></i></div>
+        ${quiz.wrong.length ? `<h3>จุดที่ควรทบทวน</h3><div style="text-align:left">${quiz.wrong.map(x=>`<div class="ex"><div>${x.label}</div><div></div></div>`).join('')}</div>` : '<p class="muted">ไม่มีข้อผิดเลย เก่งมาก ลองบทถัดไปหรือสลับเป็น "ทุกบท" ได้</p>'}
+        <div class="row" style="justify-content:center;margin-top:14px"><button class="btn primary" id="qAgain">ทำชุดใหม่</button></div>
+      </div>`;
+    bind(); $('#qAgain').onclick = () => { quiz = null; render(); }; return;
+  }
+  const q = quiz.qs[quiz.i];
+  const prog = `<p class="small muted">ข้อ ${quiz.i+1} จาก ${quiz.qs.length}</p>`;
+  if (q.type === 'order'){
+    if (!quiz.tiles.length || quiz.tilesFor !== quiz.i){
+      const toks = q.e.s.filter(([t,r]) => !(r==='' && /[。，？！]/.test(t)));
+      quiz.tiles = shuffle(toks.map((t,i)=>({t:t[0], r:t[1], id:i})));
+      quiz.placed = []; quiz.tilesFor = quiz.i; quiz.answered = false;
+    }
+    const ans = q.e.s.filter(([t,r]) => !(r==='' && /[。，？！]/.test(t))).map(x=>x[0]).join('');
+    v.innerHTML = head + prog + `
+      <div class="card">
+        <p style="margin:0 0 4px"><strong>เรียงคำให้เป็นประโยค</strong></p>
+        <p style="margin:0">${q.e.th}</p>
+        <div class="slot" id="slot" aria-label="พื้นที่เรียงประโยค">${quiz.placed.map(p=>`<button class="tk ${quiz.answered?'b-'+(p.r||'part'):''}" data-un="${p.id}">${p.t}</button>`).join('')}</div>
+        <div class="row" id="pool">${quiz.tiles.filter(t=>!quiz.placed.find(p=>p.id===t.id)).map(t=>`<button class="tk" data-pl="${t.id}">${t.t}</button>`).join('')}</div>
+        ${quiz.answered ? `<div class="fb ${quiz.ok?'ok':'no'}"><strong>${quiz.ok?'ถูกต้อง':'ยังไม่ถูก'}</strong><br><span class="zh" style="font-size:1.2rem">${segHTML(q.e.s)}</span><br><span class="small muted">${q.e.py}</span></div>
+          <div class="row" style="margin-top:12px"><button class="btn primary" id="qNext">ข้อต่อไป</button></div>` :
+          `<div class="row" style="margin-top:12px"><button class="btn primary" id="qCheck" ${quiz.placed.length?'':'disabled'}>ตรวจคำตอบ</button><button class="btn" id="qReset">ล้าง</button></div>`}
+      </div>`;
+    bind();
+    v.querySelectorAll('[data-pl]').forEach(b => b.onclick = () => { if (quiz.answered) return; quiz.placed.push(quiz.tiles.find(t=>t.id===+b.dataset.pl)); render(); });
+    v.querySelectorAll('[data-un]').forEach(b => b.onclick = () => { if (quiz.answered) return; quiz.placed = quiz.placed.filter(p=>p.id!==+b.dataset.un); render(); });
+    if (!quiz.answered){
+      $('#qReset').onclick = () => { quiz.placed = []; render(); };
+      $('#qCheck').onclick = () => {
+        quiz.answered = true; quiz.ok = quiz.placed.map(p=>p.t).join('') === ans;
+        if (quiz.ok) quiz.score++; else quiz.wrong.push({label:`เรียงประโยค: ${q.e.th} → ${ans}`, ask:`ช่วยอธิบายลำดับคำในประโยค ${ans} (${q.e.py}) ว่าทำไมเรียงแบบนี้`});
+        render();
+      };
+    } else $('#qNext').onclick = () => { quiz.i++; quiz.tiles = []; render(); };
+    return;
+  }
+  // multiple choice
+  if (!q.opts) q.opts = distract(q.w, q.type==='mean' ? 'th' : 'zh');
+  const w = q.w;
+  const label = o => q.type==='pic' ? `<span class="zh" style="font-size:1.3rem">${o.zh}</span> <span class="small muted">${pyPlain(o.py)}</span>` : o.th;
+  v.innerHTML = head + prog + `
+    <div class="card">
+      ${q.type==='pic' ? `<div class="qbig" aria-hidden="true">${w.em}</div><p style="text-align:center;margin:6px 0 0"><strong>ภาพนี้ตรงกับคำภาษาจีนข้อใด</strong></p>`
+        : `<div class="qhz">${hzHTML(w.zh,w.py)}</div><p style="text-align:center;margin:4px 0 0" class="small">${pyHTML(w.py)}</p><p style="text-align:center;margin:6px 0 0"><strong>คำนี้แปลว่าอะไร</strong></p>`}
+      <div class="opts">${q.opts.map((o,i)=>`<button class="opt" data-o="${i}">${label(o)}</button>`).join('')}</div>
+      <div id="fbBox"></div>
+    </div>`;
+  bind();
+  v.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    if (quiz.answered) return;
+    quiz.answered = true;
+    const o = q.opts[+b.dataset.o], ok = o.zh === w.zh;
+    v.querySelectorAll('.opt').forEach((x,i)=>{ x.disabled = true; if (q.opts[i].zh===w.zh) x.classList.add('ok'); });
+    if (!ok) b.classList.add('no');
+    if (ok) quiz.score++; else quiz.wrong.push({label:`${w.zh} ${pyPlain(w.py)} = ${w.th}`, ask:`ช่วยสอนคำว่า ${w.zh} (${pyPlain(w.py)}) ให้จำง่ายขึ้น ฉันสับสนกับคำอื่น`});
+    $('#fbBox').innerHTML = `<div class="fb ${ok?'ok':'no'}"><strong>${ok?'ถูกต้อง':'ยังไม่ถูก'}</strong> <span class="zh">${w.zh}</span> ${pyPlain(w.py)} = ${w.th}<br><span class="small muted">${w.tip}</span></div><div class="row" style="margin-top:12px"><button class="btn primary" id="qNext">ข้อต่อไป</button></div>`;
+    $('#qNext').onclick = () => { quiz.i++; quiz.answered = false; render(); };
+  });
+  quiz.answered = false;
+}
+
+/* ---------- tones ---------- */
+function viewTones(){
+  const v = $('#view');
+  const grid = `<g stroke="var(--line)" stroke-width="1">${[10,28,46,64,82].map(y=>`<line x1="12" x2="108" y1="${y}" y2="${y}"/>`).join('')}</g>`;
+  v.innerHTML = `
+    <h2>โทนเสียง</h2>
+    <p class="muted">ภาษาจีนกลางมี 4 เสียงกับเสียงเบา เส้นในภาพคือระดับเสียงสูงต่ำ (บนสุด = สูงสุด) ต้องไม่ถอดเสียงตามวรรณยุกต์ไทยตรง ๆ</p>
+    <div class="grid tgrid">${TONES.map(t=>`
+      <div class="card tcard">
+        <svg viewBox="0 0 120 92" class="pitch" role="img" aria-label="กราฟ${t.name} ${t.d}">${grid}
+          <path class="line draw" d="${t.path}" stroke="var(--t${t.n})" ${t.n===0?'stroke-dasharray="6 8" style="animation:none;stroke-dashoffset:0"':''}/></svg>
+        <div class="pyb t t${t.n}">${t.ex[0][0]}</div>
+        <div class="zh" style="font-size:1.4rem">${t.ex[0][1]}</div>
+        <div class="small"><strong>${t.name}</strong> · ${t.d}</div>
+        <div class="small muted">${t.ex[0][2]}</div>
+        <button class="spk" style="margin-top:6px" data-say="${t.ex[0][1]}" aria-label="ฟังเสียง ${t.ex[0][1]}">🔊</button>
+      </div>`).join('')}
+    </div>
+    <h3>กฎเปลี่ยนเสียงที่ต้องรู้ตอนเที่ยว</h3>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+      <div class="card"><strong>3 + 3 → 2 + 3</strong>
+        <div class="zh" style="font-size:1.6rem;margin:6px 0">你好 <button class="spk" data-say="你好" aria-label="ฟัง">🔊</button></div>
+        <div class="small">เขียน nǐ hǎo แต่พูดเป็น <span class="t t2">ní</span> <span class="t t3">hǎo</span> เสียง 3 สองตัวติดกัน ตัวแรกจะขึ้นเป็นเสียง 2</div></div>
+      <div class="card"><strong>不 เปลี่ยนก่อนเสียง 4</strong>
+        <div class="zh" style="font-size:1.6rem;margin:6px 0">不要 <button class="spk" data-say="不要" aria-label="ฟัง">🔊</button></div>
+        <div class="small">bù ปกติเสียง 4 แต่ก่อนเสียง 4 อ่านเป็น <span class="t t2">bú</span> เช่น <span class="t t2">bú</span> <span class="t t4">yào</span> (ไม่เอา)</div></div>
+      <div class="card"><strong>一 เปลี่ยนตามเสียงที่ตามมา</strong>
+        <div class="zh" style="font-size:1.6rem;margin:6px 0">一个 · 一点儿 <button class="spk" data-say="一个" aria-label="ฟัง">🔊</button></div>
+        <div class="small">ก่อนเสียง 4: <span class="t t2">yí</span> ge · ก่อนเสียง 1, 2, 3: <span class="t t4">yì</span> เช่น <span class="t t4">yì</span>diǎnr (นิดหน่อย)</div></div>
+    </div>
+    <div class="note">ถ้ามีเสียงอ่านให้กด 🔊 เป็นเสียงสังเคราะห์ ใช้ประกอบการฝึกเท่านั้น ถ้าอยากเทียบโทนให้ฟังเจ้าของภาษาจริงด้วย</div>
+    <div class="row" style="margin-top:12px"></div>`;
+}
+
+/* ---------- init ---------- */
+renderTabs(); render();
+</script>
+</body>
+</html>
